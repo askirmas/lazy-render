@@ -26,7 +26,7 @@ describe('index', () => {
       return expect(input).not.toBe(null)
     return expect(input.click()).resolves.toBe(undefined)
   })
-  it('no children', () => expect(
+  it('children appended', () => expect(
     page.waitForSelector('.child')
     .then(() =>
       page.$$eval('.child', ({length}) => length)
