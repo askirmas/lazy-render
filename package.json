@@ -8,7 +8,7 @@
     "build:test": "next build && next export",
     "test": "jest --config jest.config.json --runInBand",
     "build": "tsc --project build.tsconfig.json",
-    "release": "npx np"
+    "release": "np"
   },
   "repository": {
     "type": "git",
