@@ -14,7 +14,11 @@
     "type": "git",
     "url": "git+ssh://git@github.com/askirmas/render-on-demand.git"
   },
-  "author": "Andrii Kirmas",
+  "author": {
+    "email": "kirmas@phystech.edu",
+    "name": "Andrii Kirmas",
+    "url": "https://about.me/kirmas"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/askirmas/render-on-demand/issues"
