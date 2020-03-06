@@ -24,12 +24,18 @@
     "isolatedModules": true,
     "outDir": "dist",
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "noEmit": true
   },
   "files": [
     "./components/RenderOnDemand.tsx"
   ],
   "exclude": [
     "node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }
