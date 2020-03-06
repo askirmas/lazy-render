@@ -2,12 +2,12 @@
   "name": "render-on-demand",
   "version": "0.0.2-0",
   "description": "",
-  "main": "dist/RenderOnDemand.jsx",
+  "main": "dist/RenderOnDemand.js",
   "scripts": {
     "dev": "next",
     "build:test": "next build && next export",
     "test": "jest --config jest.config.json --runInBand",
-    "build": "tsc --project build.tsconfig.json",
+    "build": "tsc --project tsconfig.build.json",
     "release": "np"
   },
   "repository": {

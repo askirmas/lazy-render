@@ -99,13 +99,13 @@ var RenderOnDemand = /** @class */ (function (_super) {
         var _a = this.props, _b = _a.children, children = _b === void 0 ? null : _b, _c = _a.replaceNotAppend, replaceNotAppend = _c === void 0 ? false : _c, etc = __rest(_a, ["children", "replaceNotAppend"]), append = this.state.append, ref = this.myRef, props = __assign({ ref: ref }, etc);
         return replaceNotAppend
             ? (!append
-                ? <div {...props}/>
+                ? React.createElement("div", __assign({}, props))
                 : children)
-            : <div {...props}>{!append
+            : React.createElement("div", __assign({}, props), !append
                 ? null
-                : children}</div>;
+                : children);
     };
     return RenderOnDemand;
 }(PureComponent));
 export default RenderOnDemand;
-//# sourceMappingURL=RenderOnDemand.jsx.map
+//# sourceMappingURL=RenderOnDemand.js.map
