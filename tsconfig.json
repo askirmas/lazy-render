@@ -14,7 +14,6 @@
     ],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "jsx": "preserve",
@@ -22,14 +21,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true
   },
+  "files": [
+    "./components/RenderOnDemand.tsx"
+  ],
   "exclude": [
     "node_modules"
-  ],
-  "include": [
-    "next-env.d.ts",
-    "*/**/*.ts",
-    "*/**/*.tsx"
   ]
 }
