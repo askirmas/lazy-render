@@ -1,6 +1,6 @@
 {
   "name": "render-on-demand",
-  "version": "0.0.1",
+  "version": "0.0.2-0",
   "description": "",
   "main": "dist/RenderOnDemand.jsx",
   "scripts": {
