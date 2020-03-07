@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "next",
     "build:test": "next build && next export",
-    "test": "jest --config jest.config.json --runInBand",
+    "spec": "jest --config jest.config.json --runInBand",
     "build": "tsc --project tsconfig.build.json",
-    "validate": "npm run build:test && npm run test && npm run build",
+    "test": "npm run build:test && npm run spec && npm run build",
     "release": "np"
   },
   "repository": {

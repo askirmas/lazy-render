@@ -1,2 +1,2 @@
 #!/bin/bash
-npm run validate && git add .
+npm run test && git add .
