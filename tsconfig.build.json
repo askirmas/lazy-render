@@ -28,6 +28,6 @@
     "noEmit": false
   },
   "files": [
-    "./components/RenderOnDemand.tsx"
+    "./src/index.tsx"
   ]
 }

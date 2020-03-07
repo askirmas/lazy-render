@@ -18,7 +18,7 @@ export declare type iProps = Partial<{
      */
     tag: Parameters<typeof createElement>[0];
 }> & Record<string, any>;
-export default class RenderOnDemand extends PureComponent<PropsWithChildren<iProps>, iState> {
+export default class MountOnDemand extends PureComponent<PropsWithChildren<iProps>, iState> {
     myRef: RefObject<any>;
     observer: IntersectionObserver | void;
     state: {

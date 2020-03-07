@@ -14,7 +14,7 @@ afterAll(() => browser.close())
 
 describe('index', () => {
   beforeAll(async done => {
-    await page.goto(`file://${process.cwd()}/out/index.html`, {waitUntil: "domcontentloaded"})
+    await page.goto(`file://${process.cwd()}/out/MountOnDemand.html`, {waitUntil: "domcontentloaded"})
     return done()
   })
   it('no children', () => expect(

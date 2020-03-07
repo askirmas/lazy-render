@@ -27,9 +27,6 @@
     "sourceMap": true,
     "noEmit": true
   },
-  "files": [
-    "./components/RenderOnDemand.tsx"
-  ],
   "exclude": [
     "node_modules"
   ],
