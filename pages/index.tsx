@@ -1,29 +1,17 @@
 import RenderOnDemand from '../components/RenderOnDemand'
+import './index.css'
 
 export default App;
 
-const className = 'renderOnDemand'
-, nth = (n: number) => `~.${className}`.repeat(n)
+const classNaming = (...args: string[]) => ({className: `renderOnDemand ${args.join(' ')}`})
 
 function App() {
   return <>
     <input type="checkbox"/>
-    <style>{`
-      input:not(:checked)${nth(1)} {
-        display: none;
-      }
-    `}</style>
-    <RenderOnDemand {...{className}}>
+    <RenderOnDemand {...classNaming('works','dn')}>
       <div className="child">a</div>
     </RenderOnDemand>
-    <style>{`
-      input:not(:checked) ~ .${nth(2)} {
-        overflow: hidden;
-        width: 0;
-        height: 0;
-      }
-    `}</style>
-    <RenderOnDemand {...{className}}>
+    <RenderOnDemand {...classNaming('wh0')}>
       <div className="child">b</div>
     </RenderOnDemand>
   </>

@@ -14,10 +14,12 @@ export type iProps = Partial<{
    * [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), optionally as CSS selector to
    * @default document.body
    */
+  //TODO: add other IntersectionObserverInit
   root: Element | string 
   /**
    * @default "div"
    */
+  //TODO: Deal with tracing createElement argument types
   tag: Parameters<typeof createElement>[0]
 }> & Record<string, any>
 
@@ -45,13 +47,25 @@ export default class RenderOnDemand extends PureComponent<PropsWithChildren<iPro
     const observer = (
       new IntersectionObserver(
         entries => {
-          for (const {isIntersecting, intersectionRatio} of entries)
-            if (isIntersecting && intersectionRatio) {
+          for (const entry of entries) {
+            const {
+              isIntersecting,
+              intersectionRatio,
+              //@ts-ignore Property 'isVisible' does not exist on type 'IntersectionObserverEntry'.ts(2339)
+              //isVisible = true,
+              //intersectionRect: {width, height}, 
+            } = entry
+            if (
+              isIntersecting  && intersectionRatio
+              // && isVisible 
+              // && (width || height)
+            ) {
               this.observer  = this.observer && this.observer.disconnect()
               //@ts-ignore Property 'requestIdleCallback' does not exist on type 'Window & typeof globalThis'.
               window.requestIdleCallback(append) // return id
               return;
             }
+          }
         }, {
           root
         }

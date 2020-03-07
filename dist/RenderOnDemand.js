@@ -70,8 +70,12 @@ var RenderOnDemand = /** @class */ (function (_super) {
             var e_1, _a;
             try {
                 for (var entries_1 = __values(entries), entries_1_1 = entries_1.next(); !entries_1_1.done; entries_1_1 = entries_1.next()) {
-                    var _b = entries_1_1.value, isIntersecting = _b.isIntersecting, intersectionRatio = _b.intersectionRatio;
-                    if (isIntersecting && intersectionRatio) {
+                    var entry = entries_1_1.value;
+                    var isIntersecting = entry.isIntersecting, intersectionRatio = entry.intersectionRatio;
+                    if (isIntersecting && intersectionRatio
+                    // && isVisible 
+                    // && (width || height)
+                    ) {
                         _this.observer = _this.observer && _this.observer.disconnect();
                         //@ts-ignore Property 'requestIdleCallback' does not exist on type 'Window & typeof globalThis'.
                         window.requestIdleCallback(append); // return id

@@ -18,7 +18,7 @@ describe('index', () => {
     return done()
   })
   it('no children', () => expect(
-      page.$$eval('.child', ({length}) => length)
+      page.$$eval('.works .child', ({length}) => length)
   ).resolves.toBe(0))
   it('check', async () => {
     const input = await page.$('input')
@@ -27,7 +27,7 @@ describe('index', () => {
     return expect(input.click()).resolves.toBe(undefined)
   })
   it('children appended', () => expect(
-    page.waitForSelector(':last-child > .child', {})
+    page.waitForSelector('.dn > .child')
     .then(() =>
       page.$$eval('.child', ({length}) => length)
     )
