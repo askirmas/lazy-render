@@ -26,10 +26,10 @@ describe('index', () => {
       return expect(input).not.toBe(null)
     return expect(input.click()).resolves.toBe(undefined)
   })
-  it('children appended', () => expect(
+  it('all children are visible', () => expect(
     page.waitForSelector('.dn > .child')
     .then(() =>
       page.$$eval('.child', ({length}) => length)
     )
-  ).resolves.toBe(2))
+  ).resolves.toBe(3))
 })
