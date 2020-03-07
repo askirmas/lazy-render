@@ -5,7 +5,7 @@ node_modules_
 .pnp.js
 
 # testing
-/coverage
+coverage
 /bundles
 sandbox 
 
