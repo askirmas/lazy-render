@@ -44,7 +44,7 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-import React, { PureComponent, createRef } from "react";
+import { PureComponent, createRef, createElement } from "react";
 var RenderOnDemand = /** @class */ (function (_super) {
     __extends(RenderOnDemand, _super);
     function RenderOnDemand() {
@@ -96,12 +96,12 @@ var RenderOnDemand = /** @class */ (function (_super) {
         this.observer && this.observer.disconnect();
     };
     RenderOnDemand.prototype.render = function () {
-        var _a = this.props, _b = _a.children, children = _b === void 0 ? null : _b, _c = _a.replaceNotAppend, replaceNotAppend = _c === void 0 ? false : _c, etc = __rest(_a, ["children", "replaceNotAppend"]), append = this.state.append, ref = this.myRef, props = __assign({ ref: ref }, etc);
+        var _a = this.props, _b = _a.children, children = _b === void 0 ? null : _b, _c = _a.replaceNotAppend, replaceNotAppend = _c === void 0 ? false : _c, _d = _a.tag, tag = _d === void 0 ? 'div' : _d, root = _a.root, etc = __rest(_a, ["children", "replaceNotAppend", "tag", "root"]), append = this.state.append, ref = this.myRef, props = __assign(__assign({}, etc), { ref: ref });
         return replaceNotAppend
             ? (!append
-                ? React.createElement("div", __assign({}, props))
+                ? createElement(tag, props)
                 : children)
-            : React.createElement("div", __assign({}, props), !append
+            : createElement(tag, props, !append
                 ? null
                 : children);
     };

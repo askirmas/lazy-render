@@ -1,4 +1,4 @@
-import React, { PureComponent, createRef, RefObject, PropsWithChildren } from "react"
+import { PureComponent, createRef, RefObject, PropsWithChildren, createElement, Attributes, PropsWithRef } from "react"
 
 type iState = {
   append: boolean
@@ -12,9 +12,14 @@ export type iProps = Partial<{
   replaceNotAppend: boolean
   /**
    * [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), optionally as CSS selector to
+   * @default document.body
    */
-  root: Element | string
-}>
+  root: Element | string 
+  /**
+   * @default "div"
+   */
+  tag: Parameters<typeof createElement>[0]
+}> & Record<string, any>
 
 export default class RenderOnDemand extends PureComponent<PropsWithChildren<iProps>, iState> {
   myRef: RefObject<any> = createRef()
@@ -25,7 +30,7 @@ export default class RenderOnDemand extends PureComponent<PropsWithChildren<iPro
 
   componentDidMount() {
     const append = () => this.setState({append: true})
-    , { current } = this.myRef
+    , { current } = /*this.props.ref*/ this.myRef 
     if (!current)
       return append()
 
@@ -64,6 +69,8 @@ export default class RenderOnDemand extends PureComponent<PropsWithChildren<iPro
     const {
       children = null,
       replaceNotAppend = false,
+      tag = 'div',
+      root,
       ...etc
     } = this.props
     , {
@@ -72,19 +79,24 @@ export default class RenderOnDemand extends PureComponent<PropsWithChildren<iPro
     , {
       myRef: ref,
     } = this
-    , props = {ref, ...etc}
+    , props: PropsWithRef<any> & Attributes = {...etc, ref}
 
     return replaceNotAppend
     ? (
       !append
-      ? <div {...props}/>
+      ? createElement(
+        tag,
+        props
+      )
       : children
     )
-    : <div {...props}>{
+    : createElement(
+      tag,
+      props,
       !append
       ? null
       : children
-    }</div>
+    )
   }
 }
 
