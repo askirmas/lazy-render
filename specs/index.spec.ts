@@ -27,7 +27,7 @@ describe('index', () => {
     return expect(input.click()).resolves.toBe(undefined)
   })
   it('children appended', () => expect(
-    page.waitForSelector('.child')
+    page.waitForSelector(':last-child > .child', {})
     .then(() =>
       page.$$eval('.child', ({length}) => length)
     )

@@ -1,5 +1,2 @@
 #!/bin/bash
-npm run build:test &&\
-npm run test &&\
-npm run build &&\
-git add .
+npm run validate && git add .
