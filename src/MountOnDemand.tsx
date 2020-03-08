@@ -12,7 +12,7 @@ export type iProps = Partial<{
   replaceNotAppend: boolean
   /**
    * [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), optionally as CSS selector to
-   * @default document.body
+   * @default null // means viewport 
    */
   //TODO: add other IntersectionObserverInit
   root: Element | string 
@@ -37,13 +37,13 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
       return append()
 
     const {
-      root: _r = document.body
+      root: _r = null
     } = this.props
     , root = typeof _r === 'string'
     ? document.querySelector(_r)
     : _r
-    if (!root)
-      return append()
+
+    //TODO: Observer may be in props
     const observer = (
       new IntersectionObserver(
         entries => {

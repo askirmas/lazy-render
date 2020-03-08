@@ -10,7 +10,7 @@ export declare type iProps = Partial<{
     replaceNotAppend: boolean;
     /**
      * [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), optionally as CSS selector to
-     * @default document.body
+     * @default null // means viewport
      */
     root: Element | string;
     /**

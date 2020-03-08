@@ -61,11 +61,10 @@ var MountOnDemand = /** @class */ (function (_super) {
         var append = function () { return _this.setState({ append: true }); }, current = this.myRef.current;
         if (!current)
             return append();
-        var _a = this.props.root, _r = _a === void 0 ? document.body : _a, root = typeof _r === 'string'
+        var _a = this.props.root, _r = _a === void 0 ? null : _a, root = typeof _r === 'string'
             ? document.querySelector(_r)
             : _r;
-        if (!root)
-            return append();
+        //TODO: Observer may be in props
         var observer = (new IntersectionObserver(function (entries) {
             var e_1, _a;
             try {
