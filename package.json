@@ -10,7 +10,7 @@
     "test/spec": "jest --config specs/jest.config.json --runInBand",
     "build": "tsc --project tsconfig.build.json",
     "test": "npm run test/unit && npm run build:test && npm run test/spec && npm run build",
-    "release": "np"
+    "release": "np --no-2f"
   },
   "repository": {
     "type": "git",
@@ -42,6 +42,9 @@
   },
   "dependencies": {
     "react": "^16.13.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "files": [
     "dist",
