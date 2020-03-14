@@ -7,7 +7,6 @@ node_modules_
 # testing
 coverage
 /bundles
-sandbox 
 
 # production
 /build

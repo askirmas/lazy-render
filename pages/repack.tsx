@@ -1,5 +1,6 @@
-import { PropsWithChildren, Fragment, memo, ReactFragment, ReactNodeArray } from "react"
+import { PropsWithChildren, Fragment, memo } from "react"
 import { powered } from "../utils/arr_repack"
+import destructChildren from "../utils/destructChildren"
 
 export default Page
 const arrGen = (length: number) => new Array(length).fill(0)
@@ -36,7 +37,7 @@ function Page() {
 
 /*---*/
 function repacker(children: any) {
-  return powered(3, destructFragment(children))
+  return powered(3, destructChildren(children))
 }
 const Repack = memo(MyRepacker)
 function MyRepacker({children, ...props}: PropsWithChildren<any>) {
@@ -70,19 +71,6 @@ function RepackContainerRender({children, ...props}: PropsWithChildren<any>) {
     },
     ...props
   }}>{children}</span>
-}
-
-function destructFragment<T extends ReactFragment>(children: T): ReactNodeArray
-function destructFragment<T>(children: T[]): T
-function destructFragment<T>(children: T): T
-function destructFragment(children: any) {
-  if (!(children && typeof children === 'object'))
-    return children
-  if (Array.isArray(children))
-    return children
-  if ('type' in children && children.type === Fragment)
-    return children.props.children
-  return children
 }
 
 function packArray(children: any, creator: (i: number, children: any) => any) {
