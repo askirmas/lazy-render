@@ -9,3 +9,7 @@ input:not(:checked) ~ .renderOnDemand.wh0 {
 input:not(:checked) ~ .renderOnDemand.cp {
   clip-path: polygon(0% 0%, 0% 0%);
 }
+
+.Include:not(:checked) + * {
+  display: none;
+}

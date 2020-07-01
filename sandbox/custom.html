@@ -1,0 +1,22 @@
+<script>
+  class MyCust extends HTMLElement {
+    constructor(...args) {
+      super(...args)
+      const shadow = this.attachShadow({mode: 'open'})
+      /*, div = document.createElement('div')
+      shadow.appendChild(div)*/
+    }
+    connectedCallback(...args) {
+      console.log('connectedCallback', args)
+      const shadow = this.shadowRoot
+      this.append
+      console.log()
+      shadow.appendChild(document.createElement('div'))
+    }
+    adoptedCallback(...args) {
+      console.log('adoptedCallback', args)
+    }
+  }
+  customElements.define('my-cust', MyCust)
+</script>
+<my-cust><div>hi</div></my-cust>

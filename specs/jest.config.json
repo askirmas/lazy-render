@@ -9,5 +9,5 @@
   "setupFilesAfterEnv": ["expect-puppeteer"],
   "preset": "jest-puppeteer",
   "verbose": true,
-  "bail": true
+  "bail": 1
 }
