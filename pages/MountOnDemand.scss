@@ -1,8 +1,31 @@
-#MountOnDemand {
-  input:not(:checked) ~ * {
-    display: none;
-  }  
+section {
+  &::before {
+    content: attr(title);
+    display: block;
+    font-weight: bold;
+  }
 }
+
+article {
+  &::before {
+    content: attr(title) ":";
+    font-style: italic;
+  }
+}
+
+.child {
+  &::before {
+    content: "- ";
+  }
+  &::after {
+    content: attr(title);
+  }
+}
+
+
+input.display-none:not(:checked) ~ * div {
+  display: none;
+}  
 
 /* input:not(:checked) ~ .mountOnDemand.wh0 {
   overflow: hidden;

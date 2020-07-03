@@ -8,31 +8,47 @@ export default App
 
 function App() {
   return <main {...{id}}>
-    <input type="checkbox"/>
-    <MountOnDemand key="singleChild">
-      <div className="child">dn</div>
-    </MountOnDemand>
-    <MountOnDemand key="SeveralChildren">
-      <div key="first" className="child">dn</div>
-      <div key="second" className="child">dn</div>
-    </MountOnDemand>
-    <MountOnDemand key="frag">
-      <>
-        <div key="first" className="child">dn</div>
-        <div key="second" className="child">dn</div>
-      </>
-    </MountOnDemand>
-    <MountOnDemand key="Fragment">
-      <Fragment key="fragment">
-        <div key="first" className="child">dn</div>
-        <div key="second" className="child">dn</div>
-      </Fragment>
-    </MountOnDemand>
-    <MountOnDemand key="Array">
-      {[
-        <div key="first" className="child">dn</div>,
-        <div key="second" className="child">dn</div>
-      ]}
-    </MountOnDemand>
+    <section title="Different children structures">
+      <input className="display-none" type="checkbox"/>
+      <article title="Single child">
+        <MountOnDemand>
+          <div title="single" className="child"/>
+        </MountOnDemand>
+      </article>
+      <article title="Several children">
+        <MountOnDemand>
+          <div key="first" title="first" className="child"/>
+          <div key="second" title="second" className="child"/>
+          <div key="third" title="third" className="child"/>
+        </MountOnDemand>
+      </article>
+      <article title="Fragment shot syntax">
+        <MountOnDemand>
+          <>
+            <div key="first" title="first" className="child"/>
+            <div key="second" title="second" className="child"/>
+            <div key="third" title="third" className="child"/>
+          </>
+        </MountOnDemand>
+      </article>
+      <article title="Fragment">
+        <MountOnDemand>
+          <Fragment>
+            <div key="first" title="first" className="child"/>
+            <div key="second" title="second" className="child"/>
+            <div key="third" title="third" className="child"/>
+          </Fragment>
+        </MountOnDemand>
+      </article>
+      <article title="Array">
+        <MountOnDemand>
+          {[
+            <div key="first" title="first" className="child"/>,
+            <div key="second" title="second" className="child"/>,
+            <div key="third" title="third" className="child"/>
+          ]}
+        </MountOnDemand>
+      </article>
+    </section>
   </main>
 }
