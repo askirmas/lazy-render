@@ -7,10 +7,19 @@
   }
 }
 
-
-input.display-none:not(:checked) ~ * .target {
-  display: none;
-}  
+input {
+  display: flex;
+  &::before {
+    white-space: pre;
+    content: "    ";
+  }
+  &::after {
+    content: "Try" 
+  }
+  &.display-none:not(:checked) ~ * .target {
+    display: none;
+  } 
+} 
 
 /* input:not(:checked) ~ .mountOnDemand.wh0 {
   overflow: hidden;

@@ -1,6 +1,6 @@
 import {MountOnDemand} from '../src'
 import './MountOnDemand.scss'
-import { Fragment } from 'react'
+import { Fragment, PropsWithChildren, createElement } from 'react'
 
 const id = "MountOnDemand"
 
@@ -8,34 +8,34 @@ export default App
 
 function App() {
   return <main {...{id}}>
-    <h1>Mount on Demand</h1>
+    <H i="1">Mount on Demand</H>
     <section data-cypress="0">
-      <h2>Note! Don't forget to apply CSS rule to MountOnDemand</h2>
+      <H i="2">Note! Don't forget to apply CSS rule to MountOnDemand</H>
       <input className="display-none" type="checkbox"/>
       <article>
-        <h3>No className</h3>
+        <H i="3">No className</H>
         <MountOnDemand>
           <div title="no className" className="target" data-cypress="child"/>
         </MountOnDemand>
       </article>
       <article>
-        <h3>Wrong className</h3>     
+        <H i="3">Wrong className</H>     
         <MountOnDemand className="another-target">
           <div title="wrong className" className="target" data-cypress="child"/>
         </MountOnDemand>      
       </article>
     </section>
     <section data-cypress="1">
-      <h2>Different children structures</h2>
+      <H i="2">Different children structures</H>
       <input className="display-none" type="checkbox"/>
       <article>
-        <h3>Single child</h3>
+        <H i="3">Single child</H>
         <MountOnDemand className="target" data-cypress="ghost">
           <div title="single" className="target" data-cypress="child"/>
         </MountOnDemand>
       </article>
       <article>
-        <h3>Several children</h3>
+        <H i="3">Several children</H>
         <MountOnDemand className="target" data-cypress="ghost">
           <div key="first" title="first" className="target" data-cypress="child"/>
           <div key="second" title="second" className="target" data-cypress="child"/>
@@ -43,7 +43,7 @@ function App() {
         </MountOnDemand>
       </article>
       <article>
-        <h3>Fragment shot syntax</h3>
+        <H i="3">Fragment shot syntax</H>
         <MountOnDemand className="target" data-cypress="ghost">
           <>
             <div key="first" title="first" className="target" data-cypress="child"/>
@@ -53,7 +53,7 @@ function App() {
         </MountOnDemand>
       </article>
       <article>
-        <h3>Fragment</h3>
+        <H i="3">Fragment</H>
         <MountOnDemand className="target" data-cypress="ghost">
           <Fragment>
             <div key="first" title="first" className="target" data-cypress="child"/>
@@ -63,7 +63,7 @@ function App() {
         </MountOnDemand>
       </article>
       <article>
-        <h3>Array</h3>
+        <H i="3">Array</H>
         <MountOnDemand className="target" data-cypress="ghost">
           {[
             <div key="first" title="first" className="target" data-cypress="child"/>,
@@ -74,4 +74,22 @@ function App() {
       </article>
     </section>
   </main>
+}
+
+
+function H({children = [], i}: PropsWithChildren<{i: number|string}>) {
+  const id = typeof children === "string" && children.replace(/\s/g, '-').toLocaleLowerCase()
+
+  return createElement(
+    `h${i}`,
+    {id},
+    [
+      !id
+      ? null 
+      : <a key="a" href={`#${id}`}>#</a>
+    ].concat(
+      //@ts-ignore
+      children
+    )
+  )
 }
