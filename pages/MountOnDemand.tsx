@@ -8,57 +8,67 @@ export default App
 
 function App() {
   return <main {...{id}}>
-    <section title="Note! Don't forget to apply CSS rule to MountOnDemand" data-index="0">
+    <h1>Mount on Demand</h1>
+    <section data-cypress="0">
+      <h2>Note! Don't forget to apply CSS rule to MountOnDemand</h2>
       <input className="display-none" type="checkbox"/>
-      <article title="No className">
+      <article>
+        <h3>No className</h3>
         <MountOnDemand>
-          <div title="no className" className="main target"/>
+          <div title="no className" className="target" data-cypress="child"/>
         </MountOnDemand>
       </article>
-      <article title="Wrong className">     
+      <article>
+        <h3>Wrong className</h3>     
         <MountOnDemand className="another-target">
-          <div title="wrong className" className="main target"/>
+          <div title="wrong className" className="target" data-cypress="child"/>
         </MountOnDemand>      
       </article>
     </section>
-    <section title="Different children structures" data-index="1">
+    <section data-cypress="1">
+      <h2>Different children structures</h2>
       <input className="display-none" type="checkbox"/>
-      <article title="Single child">
-        <MountOnDemand className="ghost target">
-          <div title="single" className="main target"/>
+      <article>
+        <h3>Single child</h3>
+        <MountOnDemand className="target" data-cypress="ghost">
+          <div title="single" className="target" data-cypress="child"/>
         </MountOnDemand>
       </article>
-      <article title="Several children">
-        <MountOnDemand className="ghost target">
-          <div key="first" title="first" className="main target"/>
-          <div key="second" title="second" className="main target"/>
-          <div key="third" title="third" className="main target"/>
+      <article>
+        <h3>Several children</h3>
+        <MountOnDemand className="target" data-cypress="ghost">
+          <div key="first" title="first" className="target" data-cypress="child"/>
+          <div key="second" title="second" className="target" data-cypress="child"/>
+          <div key="third" title="third" className="target" data-cypress="child"/>
         </MountOnDemand>
       </article>
-      <article title="Fragment shot syntax">
-        <MountOnDemand className="ghost target">
+      <article>
+        <h3>Fragment shot syntax</h3>
+        <MountOnDemand className="target" data-cypress="ghost">
           <>
-            <div key="first" title="first" className="main target"/>
-            <div key="second" title="second" className="main target"/>
-            <div key="third" title="third" className="main target"/>
+            <div key="first" title="first" className="target" data-cypress="child"/>
+            <div key="second" title="second" className="target" data-cypress="child"/>
+            <div key="third" title="third" className="target" data-cypress="child"/>
           </>
         </MountOnDemand>
       </article>
-      <article title="Fragment">
-        <MountOnDemand className="ghost target">
+      <article>
+        <h3>Fragment</h3>
+        <MountOnDemand className="target" data-cypress="ghost">
           <Fragment>
-            <div key="first" title="first" className="main target"/>
-            <div key="second" title="second" className="main target"/>
-            <div key="third" title="third" className="main target"/>
+            <div key="first" title="first" className="target" data-cypress="child"/>
+            <div key="second" title="second" className="target" data-cypress="child"/>
+            <div key="third" title="third" className="target" data-cypress="child"/>
           </Fragment>
         </MountOnDemand>
       </article>
-      <article title="Array">
-        <MountOnDemand className="ghost target">
+      <article>
+        <h3>Array</h3>
+        <MountOnDemand className="target" data-cypress="ghost">
           {[
-            <div key="first" title="first" className="main target"/>,
-            <div key="second" title="second" className="main target"/>,
-            <div key="third" title="third" className="main target"/>
+            <div key="first" title="first" className="target" data-cypress="child"/>,
+            <div key="second" title="second" className="target" data-cypress="child"/>,
+            <div key="third" title="third" className="target" data-cypress="child"/>
           ]}
         </MountOnDemand>
       </article>

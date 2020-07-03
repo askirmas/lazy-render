@@ -1,16 +1,19 @@
-const mainTarget = '.main.target'
-, ghostTarget = '.ghost.target'
+const cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? '' : `="${x}"`}]`
+, section = (x?: string|number) => `section${cyAttr(x)}`
+, target = `.target`
+, mainTarget = `${target}${cyAttr('child')}`
+, ghostTarget = `${target}${cyAttr('ghost')}`
 
 describe('MountOnDemand', () => {
   before(() => cy.visit('MountOnDemand'))
 
   it('suites count', () => cy
-    .get(`section[data-index]`)
+    .get(section())
     .should('have.length', 2)
   )
 
   describe("0. no class", () => {
-    beforeEach(() => cy.get("section[data-index=0]").as("container"))
+    beforeEach(() => cy.get(section(0)).as("container"))
 
     it('everything rendered', () => cy
       .get('@container')
@@ -26,7 +29,7 @@ describe('MountOnDemand', () => {
   })
 
   describe("1. children structures", () => {
-    beforeEach(() => cy.get("section[data-index=1]").as("container"))
+    beforeEach(() => cy.get(section(1)).as("container"))
 
     it('No children', () => cy
       .get('@container')

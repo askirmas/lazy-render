@@ -1,18 +1,3 @@
-section {
-  &::before {
-    content: attr(title);
-    display: block;
-    font-weight: bold;
-  }
-}
-
-article {
-  &::before {
-    content: attr(title) ":";
-    font-style: italic;
-  }
-}
-
 .target {
   &::before {
     content: "- ";
