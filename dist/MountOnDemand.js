@@ -44,42 +44,53 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-import { PureComponent, createRef, createElement } from "react";
+import { PureComponent, createRef, createElement, Children } from "react";
+var $values = Object.values;
 var MountOnDemand = /** @class */ (function (_super) {
     __extends(MountOnDemand, _super);
-    function MountOnDemand() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.myRef = createRef();
+    function MountOnDemand(props, ctx) {
+        var _this = _super.call(this, props, ctx) || this;
         _this.observer = undefined;
         _this.state = {
-            append: false
+            statuses: {}
         };
+        var children = props.children, statuses = _this.state.statuses;
+        Children.forEach(children, function (child, i) {
+            // TODO pick from child
+            return statuses[getKey(child, i)] = createRef();
+        });
         return _this;
     }
     MountOnDemand.prototype.componentDidMount = function () {
         var _this = this;
-        var append = function () { return _this.setState({ append: true }); }, current = this.myRef.current;
-        if (!current)
-            return append();
         var _a = this.props.root, _r = _a === void 0 ? null : _a, root = typeof _r === 'string'
             ? document.querySelector(_r)
             : _r;
         //TODO: External observer may be in props
         var observer = (new IntersectionObserver(function (entries) {
             var e_1, _a;
+            var _loop_1 = function (entry) {
+                var isIntersecting = entry.isIntersecting, intersectionRatio = entry.intersectionRatio, key = entry.target.dataset.key;
+                if (key &&
+                    isIntersecting && intersectionRatio
+                // && isVisible 
+                // && (width || height)
+                )
+                    _this.setState(function (_a) {
+                        var _b;
+                        var _c, _d;
+                        var statuses = _a.statuses;
+                        var el = (_c = statuses[key]) === null || _c === void 0 ? void 0 : _c.current;
+                        if (!el)
+                            return null; //{statuses}
+                        (_d = _this.observer) === null || _d === void 0 ? void 0 : _d.unobserve(el);
+                        return { statuses: __assign(__assign({}, statuses), (_b = {}, _b[key] = null, _b)) };
+                    });
+            };
             try {
                 for (var entries_1 = __values(entries), entries_1_1 = entries_1.next(); !entries_1_1.done; entries_1_1 = entries_1.next()) {
                     var entry = entries_1_1.value;
-                    var isIntersecting = entry.isIntersecting, intersectionRatio = entry.intersectionRatio;
-                    if (isIntersecting && intersectionRatio
-                    // && isVisible 
-                    // && (width || height)
-                    ) {
-                        _this.observer = _this.observer && _this.observer.disconnect();
-                        //@ts-ignore Property 'requestIdleCallback' does not exist on type 'Window & typeof globalThis'.
-                        window.requestIdleCallback(append); // return id
-                        return;
-                    }
+                    _loop_1(entry);
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -92,23 +103,53 @@ var MountOnDemand = /** @class */ (function (_super) {
         }, {
             root: root
         }));
-        observer.observe(current);
         this.observer = observer;
+        this.componentDidUpdate();
     };
     MountOnDemand.prototype.componentWillUnmount = function () {
         this.observer && this.observer.disconnect();
     };
+    MountOnDemand.prototype.componentDidUpdate = function () {
+        var observer = this.observer, statuses = this.state.statuses;
+        if (!observer)
+            return;
+        $values(statuses)
+            .forEach(function (ref) {
+            var el = ref === null || ref === void 0 ? void 0 : ref.current;
+            if (el)
+                observer.observe(el);
+        });
+        // Alternative way:
+        // for (const key in statuses) {
+        //   const el = statuses[key]?.current
+        //   if (el)
+        //     observer?.observe(el)
+        // }
+    };
     MountOnDemand.prototype.render = function () {
-        var _a = this.props, _b = _a.children, children = _b === void 0 ? null : _b, _c = _a.replaceNotAppend, replaceNotAppend = _c === void 0 ? false : _c, _d = _a.tag, tag = _d === void 0 ? 'div' : _d, root = _a.root, etc = __rest(_a, ["children", "replaceNotAppend", "tag", "root"]), append = this.state.append, ref = this.myRef, props = __assign(__assign({}, etc), { ref: ref });
-        return replaceNotAppend
-            ? (!append
-                ? createElement(tag, props)
-                : children)
-            : createElement(tag, props, !append
-                ? null
-                : children);
+        var _a = this.props, children = _a.children, _b = _a.tag, tag = _b === void 0 ? 'div' : _b, root = _a.root, etc = __rest(_a, ["children", "tag", "root"]), statuses = this.state.statuses;
+        return Children.map(children, function (child, i) {
+            var key = getKey(child, i);
+            switch (statuses[key]) {
+                case null:
+                    return child;
+                case undefined:
+                    statuses[key] = createRef();
+                default:
+                    return createElement(tag, __assign(__assign({}, etc), {
+                        key: key,
+                        "ref": statuses[key],
+                        "data-key": key
+                    }));
+            }
+        });
     };
     return MountOnDemand;
 }(PureComponent));
 export default MountOnDemand;
+function getKey(child, index) {
+    var _a;
+    //@ts-ignore
+    return (_a = child === null || child === void 0 ? void 0 : child.key) !== null && _a !== void 0 ? _a : "" + index;
+}
 //# sourceMappingURL=MountOnDemand.js.map

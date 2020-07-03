@@ -1,7 +1,7 @@
 describe('MountOnDemand', () => {
   before(() => cy.visit('MountOnDemand'))
   it('start - no children', () => cy
-    .get('.mountOnDemand:not(:empty)')
+    .get('main .child')
     .should('have.length', 0
     )
   )
@@ -16,7 +16,7 @@ describe('MountOnDemand', () => {
   )
 
   it('all mounted', () => cy
-    .get('.mountOnDemand *')
-    .should('have.length', 1)
+    .get('main div:not(.child)')
+    .should('have.length', 0)
   )
 })

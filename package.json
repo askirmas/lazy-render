@@ -37,22 +37,21 @@
   "homepage": "https://github.com/askirmas/render-on-demand#readme",
   "devDependencies": {
     "@cypress/browserify-preprocessor": "^3.0.0",
+    "@types/jest": "^26.0.3",
     "@types/react": "^16.9.41",
     "@zeit/next-css": "^1.0.1",
     "cypress": "^4.9.0",
     "cypress-plugin-snapshots": "^1.4.3",
     "git-hooks-wrapper": "^0.4.6",
     "jest": "^25.5.4",
-    "next": "^9.3.6",
+    "next": "9.3.6",
     "np": "^6.2.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "ts-jest": "^25.5.1",
     "typescript": "^3.9.6"
   },
-  "dependencies": {
-    "@types/jest": "^26.0.3"
-  },
+  "dependencies": {},
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

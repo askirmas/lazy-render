@@ -1,4 +1,4 @@
-input:not(:checked) ~ .mountOnDemand.display-none {
+input:not(:checked) ~ * {
   display: none;
 }
 
