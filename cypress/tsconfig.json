@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "isolatedModules": false,
+    "downlevelIteration": true,
+    "baseUrl": "../node_modules",
+    "lib": [
+      "es5",
+      "dom",
+      "dom.iterable",
+    ],
+    "types": [
+      "node",
+      "cypress",
+      "cypress-plugin-snapshots"
+    ],
+    "noEmit": true
+  }
+}

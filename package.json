@@ -5,12 +5,15 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "next",
-    "build:test": "next build && next export",
-    "test/unit": "jest --config jest.config.json --runInBand",
-    "test/spec": "jest --config specs/jest.config.json --runInBand",
     "build": "tsc --project tsconfig.build.json",
-    "test": "npm run test/unit && npm run build:test && npm run test/spec && npm run build",
-    "release": "np --no-2f"
+    "test": "npm run test/unit && npm run test/spec",
+    "release": "np --no-2f",
+    "prebuild": "npm run test",
+    "test/unit": "jest --config jest.config.json --runInBand",
+    "pretest/spec": "next build && next export",
+    "test/spec": "npm run spec/chrome && npm run spec/firefox",
+    "spec/chrome": "cypress run --headless --browser chrome",
+    "spec/firefox": "cypress run --headless --browser firefox"
   },
   "repository": {
     "type": "git",
@@ -27,24 +30,26 @@
   },
   "homepage": "https://github.com/askirmas/render-on-demand#readme",
   "devDependencies": {
-    "@types/expect-puppeteer": "^4.4.0",
-    "@types/puppeteer": "^2.0.1",
+    "@cypress/browserify-preprocessor": "^3.0.0",
+    "@types/react": "^16.9.41",
     "@zeit/next-css": "^1.0.1",
+    "cypress": "^4.9.0",
+    "cypress-plugin-snapshots": "^1.4.3",
     "git-hooks-wrapper": "^0.4.6",
-    "jest": "^25.1.0",
-    "jest-puppeteer": "^4.4.0",
-    "next": "^9.2.2",
-    "np": "^6.2.0",
-    "puppeteer": "^2.1.1",
-    "react-dom": "^16.13.0",
-    "ts-jest": "^25.2.1",
-    "typescript": "^3.8.3"
+    "jest": "^25.5.4",
+    "next": "^9.3.6",
+    "np": "^6.2.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "ts-jest": "^25.5.1",
+    "typescript": "^3.9.6"
   },
   "dependencies": {
-    "react": "^16.13.0"
+    "@types/jest": "^26.0.3"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "files": [
     "dist",

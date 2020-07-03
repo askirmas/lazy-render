@@ -1,0 +1,25 @@
+{
+  "video": false,
+  "viewportWidth": 1920,
+  "viewportHeight": 1080,
+  "ignoreTestFiles": [
+    "**/__snapshots__/*",
+    "**/__image_snapshots__/*"
+  ],
+  "firefoxGcInterval": {
+    "runMode": null,
+    "openMode": null
+  },
+  "env": {
+    "cypress-plugin-snapshots": {
+      "autoCleanUp": false,
+      "autopassNewSnapshots": false,
+      "backgroundBlend": "overlay",
+      "updateSnapshots": false,
+      "imageConfig": {
+        "threshold": 0.00,
+        "thresholdType": "percent"
+      }
+    }
+  }
+}
