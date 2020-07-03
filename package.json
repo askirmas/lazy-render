@@ -19,7 +19,8 @@
     "spec/chrome": "npm run spec.core -- --browser chrome",
     "spec/firefox": "npm run spec.core -- --browser firefox",
     "spec.core": "cypress run --headless",
-    "spec.open": "cypress open"
+    "spec.open": "cypress open",
+    "spec.open@dev": "npm run spec.open -- --config baseUrl=\"http://localhost:3000/\""
   },
   "repository": {
     "type": "git",

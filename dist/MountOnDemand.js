@@ -88,8 +88,10 @@ var MountOnDemand = /** @class */ (function (_super) {
         var observer = this.observer;
         observer && observer.disconnect();
     };
-    MountOnDemand.prototype.componentDidUpdate = function () {
+    MountOnDemand.prototype.componentDidUpdate = function (prevProps) {
         var _this = this;
+        if (prevProps === this.props)
+            return;
         var observer = this.observer;
         observer && observeStatused(observer, this.state.statuses);
         this.setState(function (_a) {

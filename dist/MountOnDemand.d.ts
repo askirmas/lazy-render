@@ -27,7 +27,7 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
     constructor(props: PropsWithChildren<iProps>, ctx: unknown);
     componentDidMount(): void;
     componentWillUnmount(): void;
-    componentDidUpdate(): void;
+    componentDidUpdate(prevProps?: iProps): void;
     render(): {}[] | null | undefined;
 }
 export {};

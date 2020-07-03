@@ -12,6 +12,8 @@ coverage
 /build
 /.next
 /out
+/dist
+
 # misc
 .DS_Store
 .env.local

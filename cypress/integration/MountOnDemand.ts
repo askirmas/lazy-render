@@ -9,7 +9,7 @@ describe('MountOnDemand', () => {
 
   it('suites count', () => cy
     .get(section())
-    .should('have.length', 2)
+    .should('have.length', 3)
   )
 
   describe("0. no class", () => {
@@ -71,5 +71,61 @@ describe('MountOnDemand', () => {
         })      
       )
     )
+
+    describe.only('#2 Dynamic children', () => {
+      beforeEach(() => cy.get(section(2)).as("container"))
+
+      it('TBD', () => cy
+        .get('@container')
+        .within(() => cy
+          .get(mainTarget)
+          .should('have.length', 0)
+          .get(`${mainTarget}:visible`)
+          .should('have.length', 0)
+          .get(ghostTarget)
+          .should('have.length', 2)
+          .get(`${ghostTarget}:visible`)
+          .should('have.length', 0)
+
+          .get('article input')
+          .click()
+
+          .get(mainTarget)
+          .should('have.length', 0)
+          .get(`${mainTarget}:visible`)
+          .should('have.length', 0)
+          .get(ghostTarget)
+          .should('have.length', 2)
+          .get(`${ghostTarget}:visible`)
+          .should('have.length', 0)
+
+          .get('article input')
+          .click()
+          .get('h2 + input')
+          .click()
+
+          .get(mainTarget)
+          .should('have.length', 1)
+          .get(`${mainTarget}:visible`)
+          .should('have.length', 1)
+          .get(ghostTarget)
+          .should('have.length', 1)
+          .get(`${ghostTarget}:visible`)
+          .should('have.length', 1)
+
+          .get('article input')
+          .click()
+
+          .get(mainTarget)
+          .should('have.length', 1)
+          .get(`${mainTarget}:visible`)
+          .should('have.length', 1)
+          .get(ghostTarget)
+          .should('have.length', 1)
+          .get(`${ghostTarget}:visible`)
+          .should('have.length', 1)
+        )
+      )
+    })
   })
 })

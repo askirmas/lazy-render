@@ -89,7 +89,9 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
     observer && observer.disconnect()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps?: iProps) {
+    if (prevProps === this.props)
+      return
     const {observer} = this
     observer && observeStatused(observer, this.state.statuses)
     this.setState(({statuses}) => {

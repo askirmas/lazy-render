@@ -16,8 +16,10 @@ input {
   &::after {
     content: "Try" 
   }
-  &.display-none:not(:checked) ~ * .target {
-    display: none;
+  &.display-none:not(:checked) ~ * {
+    &.target, & .target {
+      display: none;
+    }
   } 
 } 
 
