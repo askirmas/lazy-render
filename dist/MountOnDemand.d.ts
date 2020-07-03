@@ -4,13 +4,8 @@ declare type iState = {
 };
 export declare type iProps = Partial<{
     /**
-     * - `false` - append children to host
-     * - `true` - replace host with children
-     */
-    replaceNotAppend: boolean;
-    /**
      * [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), optionally as CSS selector to
-     * @default null // means viewport
+     * @default null means viewport
      */
     root: Element | string;
     /**

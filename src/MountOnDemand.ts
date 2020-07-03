@@ -6,13 +6,8 @@ type iState = {
 
 export type iProps = Partial<{
   /**
-   * - `false` - append children to host
-   * - `true` - replace host with children 
-   */
-  replaceNotAppend: boolean
-  /**
    * [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), optionally as CSS selector to
-   * @default null // means viewport 
+   * @default null means viewport 
    */
   //TODO: add other IntersectionObserverInit
   root: Element | string 
@@ -43,7 +38,7 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
     ? document.querySelector(_r)
     : _r
 
-    //TODO: Observer may be in props
+    //TODO: External observer may be in props
     const observer = (
       new IntersectionObserver(
         entries => {

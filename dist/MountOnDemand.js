@@ -64,7 +64,7 @@ var MountOnDemand = /** @class */ (function (_super) {
         var _a = this.props.root, _r = _a === void 0 ? null : _a, root = typeof _r === 'string'
             ? document.querySelector(_r)
             : _r;
-        //TODO: Observer may be in props
+        //TODO: External observer may be in props
         var observer = (new IntersectionObserver(function (entries) {
             var e_1, _a;
             try {

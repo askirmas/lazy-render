@@ -10,10 +10,16 @@
     "release": "np --no-2f",
     "prebuild": "npm run test",
     "test/unit": "jest --config jest.config.json --runInBand",
+    "test/spec": "npm run test/spec--dry",
+    "test/spec--dry": "npm run spec/chrome && npm run spec/firefox",
     "pretest/spec": "next build && next export",
-    "test/spec": "npm run spec/chrome && npm run spec/firefox",
-    "spec/chrome": "cypress run --headless --browser chrome",
-    "spec/firefox": "cypress run --headless --browser firefox"
+    "-posttest/spec": "nyc report",
+    "spec/chrome@dev": "npm run spec/chrome -- --config baseUrl=\"http://localhost:3000/\"",
+    "spec/firefox@dev": "npm run spec/firefox -- --config baseUrl=\"http://localhost:3000/\"",
+    "spec/chrome": "npm run spec.core -- --browser chrome",
+    "spec/firefox": "npm run spec.core -- --browser firefox",
+    "spec.core": "cypress run --headless",
+    "spec.open": "cypress open"
   },
   "repository": {
     "type": "git",
