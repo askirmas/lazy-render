@@ -13,7 +13,7 @@ article {
   }
 }
 
-.child {
+.target {
   &::before {
     content: "- ";
   }
@@ -23,7 +23,7 @@ article {
 }
 
 
-input.display-none:not(:checked) ~ * div {
+input.display-none:not(:checked) ~ * .target {
   display: none;
 }  
 

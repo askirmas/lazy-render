@@ -1,4 +1,4 @@
-import { PureComponent, createRef, RefObject, PropsWithChildren, createElement, Attributes, Children, ReactNode } from "react"
+import { PureComponent, createRef, RefObject, PropsWithChildren, createElement, Attributes, Children, ReactNode, AllHTMLAttributes } from "react"
 
 type iMainProps = {
   /**
@@ -18,12 +18,13 @@ type iMainProps = {
    */
   dataSetKey: string
 }
-type RequiredProps = PropsWithChildren<iMainProps> & Attributes
+type AllAttributes = AllHTMLAttributes<HTMLElement>
+type RequiredProps = PropsWithChildren<iMainProps> & AllAttributes
 
-export type iProps = PropsWithChildren<Partial<iMainProps>> & Attributes
+export type iProps = PropsWithChildren<Partial<iMainProps>> & AllAttributes
 
 type iState = {
-  statuses: Record<string, RefObject<HTMLInputElement> | null>
+  statuses: Record<string, RefObject<HTMLElement> | null>
 }
 
 const {values: $values} = Object

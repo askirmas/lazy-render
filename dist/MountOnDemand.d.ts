@@ -1,4 +1,4 @@
-import { PureComponent, RefObject, PropsWithChildren, createElement, Attributes } from "react";
+import { PureComponent, RefObject, PropsWithChildren, createElement, AllHTMLAttributes } from "react";
 declare type iMainProps = {
     /**
      * [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), optionally as CSS selector to
@@ -15,9 +15,10 @@ declare type iMainProps = {
      */
     dataSetKey: string;
 };
-export declare type iProps = PropsWithChildren<Partial<iMainProps>> & Attributes;
+declare type AllAttributes = AllHTMLAttributes<HTMLElement>;
+export declare type iProps = PropsWithChildren<Partial<iMainProps>> & AllAttributes;
 declare type iState = {
-    statuses: Record<string, RefObject<HTMLInputElement> | null>;
+    statuses: Record<string, RefObject<HTMLElement> | null>;
 };
 export default class MountOnDemand extends PureComponent<PropsWithChildren<iProps>, iState, unknown> {
     static defaultProps: iMainProps;
