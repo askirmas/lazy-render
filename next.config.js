@@ -1,4 +1,6 @@
 const withCSS = require('@zeit/next-css')
-module.exports = withCSS({
+, withSass = require('@zeit/next-sass')
+
+module.exports = withSass(withCSS({
   assetPrefix: '.'
-})
+}))

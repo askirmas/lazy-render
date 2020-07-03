@@ -1,11 +1,13 @@
 import {MountOnDemand} from '../src'
-import './MountOnDemand.css'
+import './MountOnDemand.scss'
 import { Fragment } from 'react'
+
+const id = "MountOnDemand"
 
 export default App
 
 function App() {
-  return <main>
+  return <main {...{id}}>
     <input type="checkbox"/>
     <MountOnDemand key="singleChild">
       <div className="child">dn</div>

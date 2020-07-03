@@ -1,5 +1,7 @@
-input:not(:checked) ~ * {
-  display: none;
+#MountOnDemand {
+  input:not(:checked) ~ * {
+    display: none;
+  }  
 }
 
 /* input:not(:checked) ~ .mountOnDemand.wh0 {
