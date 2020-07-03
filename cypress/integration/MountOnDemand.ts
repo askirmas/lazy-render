@@ -13,10 +13,8 @@ describe('MountOnDemand', () => {
     .get('main div.child:not(:visible)')
     .should('have.length', 0)
     .get('main div.child')
-    .then(({length}) => cy
-      .wrap(length)
-      .as('childrenCount')
-    )
+    .its('length')
+    .as('childrenCount')
   )
 
   it('Nothing changed after uncheck', () => cy
