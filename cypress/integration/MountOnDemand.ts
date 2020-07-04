@@ -1,7 +1,10 @@
 type Values<T> = T[keyof T] 
 type Counts = Record<"child-visible"|"child-invisible"|"ghost-visible"|"ghost-invisible", number|true>
 
-const cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? "" : `="${x}"`}]`
+type func = (...args: unknown[]) => unknown
+
+const nop = () => {}
+, cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? "" : `="${x}"`}]`
 , section = (x?: string|number) => `section${cyAttr(x)}`
 , target = `.target`
 , childTarget = `${target}${cyAttr("child")}`
@@ -113,17 +116,15 @@ describe("MountOnDemand", () => {
     )
   })
 
-  describe("3. Other CSS invisibilities", () => {
-    it("visibility: hidden; z-index: -1")
-    it("opacity: 0; z-index: -1")
-    it("clip-path: polygon(0 0); z-index: -1")
+  describeContained(3, "* Other CSS invisibilities", () => {
+    itContained("* visibility: hidden; z-index: -1")
+    itContained("* opacity: 0; z-index: -1")
+    itContained("* clip-path: polygon(0 0); z-index: -1")
   })
 
-  describe("4. Observer options", () => {
-  })
+  describeContained(4, "* Observer options")
 
-  describe("5. Own options", () => {
-  })
+  describeContained(5, "* Own options")
 })
 
 function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
@@ -156,13 +157,35 @@ function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
   }
 }
 
-function describeContained(index: number, title: string, fn: (this: Mocha.Suite) => void) {
-  describe(`${index}. ${title}`, () => {
-    beforeEach(() => cy.get(section(index)).as("container"))
-    fn.call(this)
-  })
+function describeContained(index: number, title: string, fn: Parameters<typeof statused>[3] = nop) {
+  statused(
+    describe,
+    title[0],
+    `${index}. ${title}`,
+    () => {
+      beforeEach(() => cy.get(section(index)).as("container"))
+      fn.call(this)
+    }
+  )
 }
 
-function itContained(title: string, fn: () => void) {
-  it(title, () => cy.get("@container").within(fn))
+function itContained(title: string, fn: Parameters<typeof statused>[3] = nop) {
+  statused(
+    it,
+    title[0],
+    title,
+    () => cy.get("@container").within(fn.bind(this))
+  )
+}
+
+
+
+function statused(source: func & Record<"only"|"skip", func>, control: string, title: string,  fn: (this: Mocha.Suite) => void) {
+  const s = control === '!'
+  ? source.only
+  : control === '*'
+  ? source.skip
+  : source
+
+  s(title, fn)
 }
