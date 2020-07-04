@@ -7,14 +7,14 @@
   }
 }
 
-input {
+input[data-cypress="external"] {
   display: flex;
   &::before {
     white-space: pre;
     content: "    ";
   }
   &::after {
-    content: "Try" 
+    content: "Launch" 
   }
   &.display-none:not(:checked) ~ * {
     &.target, & .target {

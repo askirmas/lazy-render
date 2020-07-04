@@ -13,7 +13,7 @@ function App() {
    <H i="1">Mount on Demand</H>
     <section data-cypress="0">
       <H i="2">Note! Don't forget to apply CSS rule to MountOnDemand</H>
-      <input className="display-none" type="checkbox"/>
+      <input className="display-none" type="checkbox" data-cypress="external"/>
       <article>
         <H i="3">No className</H>
         <MountOnDemand>
@@ -29,7 +29,7 @@ function App() {
     </section>
     <section data-cypress="1">
       <H i="2">Different children structures</H>
-      <input className="display-none" type="checkbox"/>
+      <input className="display-none" type="checkbox" data-cypress="external"/>
       <article>
         <H i="3">Single child</H>
         <MountOnDemand className="target" data-cypress="ghost">
@@ -77,7 +77,7 @@ function App() {
     </section>
     <section data-cypress="2">
       <H i="2">Dynamic children</H>
-      <input type="checkbox" className="display-none"/>
+      <input type="checkbox" className="display-none" data-cypress="external"/>
       <article>
         <H i="3">Dynamic children</H>
         <DynamicChildren className="target" data-cypress="ghost">

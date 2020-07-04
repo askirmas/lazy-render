@@ -24,7 +24,7 @@ export default class DynamicChildren extends PureComponent<iProps, iState> {
     } = this
 
     return <>
-      <input type="checkbox" onChange={changeChecked}/>
+      <input type="checkbox" data-cypress="internal" onChange={changeChecked}/>
       <MountOnDemand {...props}>
         { Children.map(children, (child, i) => (i === 0 || checked) && child) }
       </MountOnDemand>

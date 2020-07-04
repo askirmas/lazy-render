@@ -1,131 +1,152 @@
-const cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? '' : `="${x}"`}]`
+type Values<T> = T[keyof T] 
+type Counts = Record<"main-visible"|"main-invisible"|"ghost-visible"|"ghost-invisible", number|true>
+
+const cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? "" : `="${x}"`}]`
 , section = (x?: string|number) => `section${cyAttr(x)}`
 , target = `.target`
-, mainTarget = `${target}${cyAttr('child')}`
-, ghostTarget = `${target}${cyAttr('ghost')}`
+, mainTarget = `${target}${cyAttr("child")}`
+, ghostTarget = `${target}${cyAttr("ghost")}`
+, externalInput = `input${cyAttr('external')}`
+, internalInput = `input${cyAttr('internal')}`
+, ghostInvisibleOnly: Counts = {
+  "ghost-visible": 0,
+  "ghost-invisible": true,
+  "main-visible": 0,
+  "main-invisible": 0,
+}
+, mainVisibleOnly: Counts = {
+  "ghost-visible": 0,
+  "ghost-invisible": 0,
+  "main-visible": true,
+  "main-invisible": 0,
+}
+, mainInvisibleOnly: Counts = {
+  "ghost-visible": 0,
+  "ghost-invisible": 0,
+  "main-visible": 0,
+  "main-invisible": true,
+}
+, ghostInvisible_x2: Partial<Counts> = {
+  "ghost-invisible": 2
+}
+, weirdFullVisibility: Counts = {
+  "main-visible": 1,
+  "main-invisible": 0,
+  "ghost-visible": 1,
+  "ghost-invisible": 0,
+} 
 
-describe('MountOnDemand', () => {
-  before(() => cy.visit('MountOnDemand'))
+describe("MountOnDemand", () => {
+  
+  before(() => cy.visit("MountOnDemand"))
 
-  it('suites count', () => cy
+  it("suites count", () => cy
     .get(section())
-    .should('have.length', 3)
+    .should("have.length", 3)
   )
 
-  describe("0. no class", () => {
-    beforeEach(() => cy.get(section(0)).as("container"))
-
-    it('everything rendered', () => cy
-      .get('@container')
-      .within(() => cy
-        .get(ghostTarget)
-        .should('have.length', 0)
-        .get(`${mainTarget}:visible`)
-        .should('have.length', 0)
-        .get(mainTarget)
-        .should('not.have.length', 0)
-      )
+  myDescribe(0, "no class", () => {
+    myIt("Everything rendered", () => cy
+      .then(checkingCounts({mainInvisibleOnly}))
+      .get(externalInput)
+      .check()
+      .then(checkingCounts({mainVisibleOnly}))
     )
   })
 
-  describe("1. children structures", () => {
-    beforeEach(() => cy.get(section(1)).as("container"))
-
-    it('No children', () => cy
-      .get('@container')
-      .within(() => cy
-        .get(mainTarget)
-        .should('have.length', 0)
-        .get(ghostTarget)
-        .should('not.have.length', 0)
-      )
+  myDescribe(1, "children structures", () => {
+    myIt("No children", () => cy
+      .then(checkingCounts({ghostInvisibleOnly}))
     )
 
-    it('All mounted after check', () => cy
-      .get('@container')
-      .within(() => cy
-        .get('input')
-        .click()
-        .get(ghostTarget)
-        .should('have.length', 0)
-        .get(`${mainTarget}:not(:visible)`)
-        .should('have.length', 0)
-        .get(mainTarget)
-        .its('length')
-        .as('childrenCount')
-      )
+    myIt("All mounted after check", () => cy
+      .get(externalInput)
+      .check()
+      .then(checkingCounts({mainVisibleOnly}))
+      .get(mainTarget)
+      .its("length")
+      .as("childrenCount")
     )
 
-    it('Nothing changed after uncheck', () => cy
-      .get('@container')
-      .within(() => cy
-        .get('input')
-        .click()
-        .get(ghostTarget)
-        .should('have.length', 0)
-        .get(`${mainTarget}:visible`)
-        .should('have.length', 0)
-        .get(mainTarget)
-        .then(function($el) {
-          expect($el.length).to.eq(this.childrenCount)
-        })      
-      )
+    myIt("Nothing changed after uncheck", () => cy
+      .get(externalInput)
+      .uncheck()
+      .then(checkingCounts({mainInvisibleOnly}))
+      .get(mainTarget)
+      .its("length")
+      .then(function(length) {
+        expect(length).to.eq(this.childrenCount)
+      })
     )
+  })
 
-    describe.only('#2 Dynamic children', () => {
-      beforeEach(() => cy.get(section(2)).as("container"))
+  myDescribe(2, "#2 Dynamic children", () => {
+    myIt("TBD", () => cy
+      .then(checkingCounts({
+        ghostInvisibleOnly,
+        ghostInvisible_x2
+      }))
 
-      it('TBD', () => cy
-        .get('@container')
-        .within(() => cy
-          .get(mainTarget)
-          .should('have.length', 0)
-          .get(`${mainTarget}:visible`)
-          .should('have.length', 0)
-          .get(ghostTarget)
-          .should('have.length', 2)
-          .get(`${ghostTarget}:visible`)
-          .should('have.length', 0)
+      .get(internalInput)
+      .check()
 
-          .get('article input')
-          .click()
+      .then(checkingCounts({
+        ghostInvisibleOnly,
+        ghostInvisible_x2
+      }))
 
-          .get(mainTarget)
-          .should('have.length', 0)
-          .get(`${mainTarget}:visible`)
-          .should('have.length', 0)
-          .get(ghostTarget)
-          .should('have.length', 2)
-          .get(`${ghostTarget}:visible`)
-          .should('have.length', 0)
+      .get(internalInput)
+      .uncheck()
+      .get(externalInput)
+      .check()
 
-          .get('article input')
-          .click()
-          .get('h2 + input')
-          .click()
+      .then(checkingCounts({weirdFullVisibility}))
 
-          .get(mainTarget)
-          .should('have.length', 1)
-          .get(`${mainTarget}:visible`)
-          .should('have.length', 1)
-          .get(ghostTarget)
-          .should('have.length', 1)
-          .get(`${ghostTarget}:visible`)
-          .should('have.length', 1)
+      .get(internalInput)
+      .check()
 
-          .get('article input')
-          .click()
-
-          .get(mainTarget)
-          .should('have.length', 1)
-          .get(`${mainTarget}:visible`)
-          .should('have.length', 1)
-          .get(ghostTarget)
-          .should('have.length', 1)
-          .get(`${ghostTarget}:visible`)
-          .should('have.length', 1)
-        )
-      )
-    })
+      .then(checkingCounts({weirdFullVisibility}))
+    )
   })
 })
+
+function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
+  return () => {
+    for (const assert in asserts) {
+      const counts = asserts[assert]
+      cy.log(assert)
+
+      for (const kind in counts) {
+        const kindCounts = counts[kind as keyof typeof counts]
+        
+        cy
+        .get(`${
+          kind.startsWith("main")
+          ? mainTarget
+          : ghostTarget 
+        }${
+          kind.endsWith("-visible")
+          ? ":visible"
+          : kind.endsWith("-invisible")
+          ? ":not(:visible)"
+          : ""
+        }`)
+        .should(
+          `${kindCounts === true ? "not." : ""}have.length`,
+          kindCounts === true ? 0 : kindCounts
+        )
+      }
+    }
+  }
+}
+
+function myDescribe(index: number, title: string, fn: (this: Mocha.Suite) => void) {
+  describe(`${index}. ${title}`, () => {
+    beforeEach(() => cy.get(section(index)).as("container"))
+    fn.call(this)
+  })
+}
+
+function myIt(title: string, fn: () => void) {
+  it(title, () => cy.get("@container").within(fn))
+}
