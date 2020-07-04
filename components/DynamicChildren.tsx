@@ -11,20 +11,23 @@ export default class DynamicChildren extends PureComponent<iProps, iState> {
 
   constructor(props: iProps) {
     super(props)
-    const {checked} = props
-    if (checked)
-      this.state.checked = checked
+    const {defaultChecked} = props
+    if (defaultChecked)
+      this.state.checked = defaultChecked
   }
   changeChecked: ChangeEventHandler<HTMLInputElement> = ({target: {checked}}) => this.setState(({checked}))
   render() {
     const {
-      props: {children, ...props},
+      props: {children, defaultChecked, ...props},
       state: {checked},
       changeChecked
     } = this
 
     return <>
-      <input type="checkbox" data-cypress="internal" onChange={changeChecked}/>
+      <input type="checkbox" data-cypress="internal" {...{
+        defaultChecked,
+        "onChange": changeChecked
+      }}/>
       <MountOnDemand {...props}>
         { Children.map(children, (child, i) => (i === 0 || checked) && child) }
       </MountOnDemand>

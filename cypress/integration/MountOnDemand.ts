@@ -29,10 +29,22 @@ const nop = () => {}
   "child-visible": 0,
   "child-invisible": true,
 }
+, each_hidden: Counts = {
+  "child-visible": 0,
+  "child-invisible": 1,
+  "ghost-visible": 0,
+  "ghost-invisible": 1,
+} 
 , two_invisible_ghosts: Partial<Counts> = {
   "ghost-invisible": 2
 }
-, weird_full_visibility: Counts = {
+, one_visible_child: Partial<Counts> = {
+  "child-visible": 1
+}
+, two_visible_children: Partial<Counts> = {
+  "child-visible": 2
+}
+, weird_visibility: Counts = {
   "child-visible": 1,
   "child-invisible": 0,
   "ghost-visible": 1,
@@ -45,20 +57,20 @@ describe("MountOnDemand", () => {
 
   it("suites count", () => cy
     .get(section())
-    .should("have.length", 3)
+    .should("have.length", 6)
   )
 
   describeContained(0, "Note", () => {
-    itContained("Ghosts are not hidden - Everything rendered", () => cy
+    itContained("UNST Ghosts are not hidden - Everything rendered", () => cy
       .then(checkingCounts({only_hidden_children}))
       .get(externalInput)
       .check()
       .then(checkingCounts({only_visible_children}))
     )
 
-    it("Children without key are not affected")
+    it("TBD Children without key are not affected")
 
-    it("Props expected to be immutable")
+    it("TBD Props expected to be immutable")
   })
 
   describeContained(1, "Static children structures", () => {
@@ -87,8 +99,8 @@ describe("MountOnDemand", () => {
     )
   })
 
-  describeContained(2, "#2 Dynamic children", () => {
-    itContained("TBD", () => cy
+  describeContained(2, "#2 Dynamic children  - -", () => {
+    itContained("RES", () => cy
       .then(checkingCounts({
         only_invisible_ghosts,
         two_invisible_ghosts
@@ -107,24 +119,112 @@ describe("MountOnDemand", () => {
       .get(externalInput)
       .check()
 
-      .then(checkingCounts({weird_full_visibility}))
+      .then(checkingCounts({weird_visibility}))
 
       .get(internalInput)
       .check()
 
-      .then(checkingCounts({weird_full_visibility}))
+      .then(checkingCounts({weird_visibility}))
     )
   })
 
-  describeContained(3, "* Other CSS invisibilities", () => {
+  describeContained(3, "#2 Dynamic children - +", () => {
+    itContained("RES", () => cy
+      .then(checkingCounts({
+        only_invisible_ghosts,
+        two_invisible_ghosts
+      }))
+
+      .get(internalInput)
+      .uncheck()
+
+      .then(checkingCounts({
+        only_invisible_ghosts,
+        two_invisible_ghosts
+      }))
+
+      .get(internalInput)
+      .check()
+      .get(externalInput)
+      .check()
+
+      .then(checkingCounts({weird_visibility}))
+
+      .get(internalInput)
+      .uncheck()
+
+      .then(checkingCounts({weird_visibility}))
+    )
+  })
+
+  describeContained(4, "#2 Dynamic children + -", () => {
+    itContained("RES", () => cy
+      .then(checkingCounts({
+        only_visible_children,
+        one_visible_child
+      }))
+
+      .get(internalInput)
+      .check()
+
+      .then(checkingCounts({weird_visibility}))
+
+      .get(internalInput)
+      .uncheck()
+      .get(externalInput)
+      .uncheck()
+
+      .then(checkingCounts({each_hidden}))
+
+      .get(internalInput)
+      .check()
+
+      .then(checkingCounts({each_hidden}))
+    )
+  })
+
+  describeContained(5, "#2 Dynamic children + +", () => {
+    itContained("RES", () => cy
+      .then(checkingCounts({
+        only_visible_children,
+        two_visible_children
+      }))
+
+      .get(internalInput)
+      .uncheck()
+
+      .then(checkingCounts({weird_visibility}))
+
+      .get(internalInput)
+      .check()
+      .get(externalInput)
+      .uncheck()
+
+      .then(checkingCounts({each_hidden}))
+
+      .get(internalInput)
+      .uncheck()
+
+      .then(checkingCounts({each_hidden}))
+    )
+  })
+
+
+  describeContained(-1, "* Other CSS invisibilities", () => {
     itContained("* visibility: hidden; z-index: -1")
     itContained("* opacity: 0; z-index: -1")
     itContained("* clip-path: polygon(0 0); z-index: -1")
   })
 
-  describeContained(4, "* Observer options")
+  describeContained(-1, "* Other CSS invisibilities", () => {
+    itContained("* visibility: hidden; z-index: -1")
+    itContained("* opacity: 0; z-index: -1")
+    itContained("* clip-path: polygon(0 0); z-index: -1")
+  })
 
-  describeContained(5, "* Own options")
+  describeContained(-1, "* Observer options")
+
+  describeContained(-1, "* Own options")
 })
 
 function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
