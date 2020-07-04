@@ -45,21 +45,25 @@ describe("MountOnDemand", () => {
     .should("have.length", 3)
   )
 
-  myDescribe(0, "no class", () => {
-    myIt("Everything rendered", () => cy
+  describeContained(0, "Note", () => {
+    itContained("Ghosts are not hidden - Everything rendered", () => cy
       .then(checkingCounts({only_hidden_children}))
       .get(externalInput)
       .check()
       .then(checkingCounts({only_visible_children}))
     )
+
+    it("Children without key are not affected")
+
+    it("Props expected to be immutable")
   })
 
-  myDescribe(1, "children structures", () => {
-    myIt("No children", () => cy
+  describeContained(1, "Static children structures", () => {
+    itContained("No children in DOM", () => cy
       .then(checkingCounts({only_invisible_ghosts}))
     )
 
-    myIt("All mounted after check", () => cy
+    itContained("All children are mounted after check", () => cy
       .get(externalInput)
       .check()
       .then(checkingCounts({only_visible_children}))
@@ -68,7 +72,7 @@ describe("MountOnDemand", () => {
       .as("childrenCount")
     )
 
-    myIt("Nothing changed after uncheck", () => cy
+    itContained("Nothing changed after uncheck", () => cy
       .get(externalInput)
       .uncheck()
       .then(checkingCounts({only_hidden_children}))
@@ -80,8 +84,8 @@ describe("MountOnDemand", () => {
     )
   })
 
-  myDescribe(2, "#2 Dynamic children", () => {
-    myIt("TBD", () => cy
+  describeContained(2, "#2 Dynamic children", () => {
+    itContained("TBD", () => cy
       .then(checkingCounts({
         only_invisible_ghosts,
         two_invisible_ghosts
@@ -107,6 +111,18 @@ describe("MountOnDemand", () => {
 
       .then(checkingCounts({weird_full_visibility}))
     )
+  })
+
+  describe("3. Other CSS invisibilities", () => {
+    it("visibility: hidden; z-index: -1")
+    it("opacity: 0; z-index: -1")
+    it("clip-path: polygon(0 0); z-index: -1")
+  })
+
+  describe("4. Observer options", () => {
+  })
+
+  describe("5. Own options", () => {
   })
 })
 
@@ -140,13 +156,13 @@ function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
   }
 }
 
-function myDescribe(index: number, title: string, fn: (this: Mocha.Suite) => void) {
+function describeContained(index: number, title: string, fn: (this: Mocha.Suite) => void) {
   describe(`${index}. ${title}`, () => {
     beforeEach(() => cy.get(section(index)).as("container"))
     fn.call(this)
   })
 }
 
-function myIt(title: string, fn: () => void) {
+function itContained(title: string, fn: () => void) {
   it(title, () => cy.get("@container").within(fn))
 }
