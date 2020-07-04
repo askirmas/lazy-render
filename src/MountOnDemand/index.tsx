@@ -1,4 +1,4 @@
-import { PureComponent, createRef, PropsWithChildren, createElement, Attributes, Children } from "react"
+import { PureComponent, PropsWithChildren, createElement, Attributes, Children } from "react"
 import { AllAttributes } from "../../defs"
 import { defaultProps, MOUNTED, sStatuses, Props } from "./defs"
 import { getKey, onIntersectionEntries, observeStatused, nextStatuses } from "./helpers"
@@ -23,13 +23,8 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
 
   constructor(props: PropsWithChildren<iProps>, ctx: unknown) {
     super(props, ctx)
-    const {children} = props
-    , {statuses} = this.state
-
-    Children.forEach(children, (child, i) => {
-      const key = getKey(child, i)
-      statuses[key] === undefined && (statuses[key] = /*TODO pick from child*/ createRef())
-    })
+    
+    this.state.statuses = nextStatuses({}, this.props.children) ?? {}
   }
 
   componentDidMount() {
