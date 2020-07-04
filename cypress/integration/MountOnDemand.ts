@@ -1,37 +1,37 @@
 type Values<T> = T[keyof T] 
-type Counts = Record<"main-visible"|"main-invisible"|"ghost-visible"|"ghost-invisible", number|true>
+type Counts = Record<"child-visible"|"child-invisible"|"ghost-visible"|"ghost-invisible", number|true>
 
 const cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? "" : `="${x}"`}]`
 , section = (x?: string|number) => `section${cyAttr(x)}`
 , target = `.target`
-, mainTarget = `${target}${cyAttr("child")}`
+, childTarget = `${target}${cyAttr("child")}`
 , ghostTarget = `${target}${cyAttr("ghost")}`
 , externalInput = `input${cyAttr('external')}`
 , internalInput = `input${cyAttr('internal')}`
-, ghostInvisibleOnly: Counts = {
+, only_invisible_ghosts: Counts = {
   "ghost-visible": 0,
   "ghost-invisible": true,
-  "main-visible": 0,
-  "main-invisible": 0,
+  "child-visible": 0,
+  "child-invisible": 0,
 }
-, mainVisibleOnly: Counts = {
+, only_visible_children: Counts = {
   "ghost-visible": 0,
   "ghost-invisible": 0,
-  "main-visible": true,
-  "main-invisible": 0,
+  "child-visible": true,
+  "child-invisible": 0,
 }
-, mainInvisibleOnly: Counts = {
+, only_hidden_children: Counts = {
   "ghost-visible": 0,
   "ghost-invisible": 0,
-  "main-visible": 0,
-  "main-invisible": true,
+  "child-visible": 0,
+  "child-invisible": true,
 }
-, ghostInvisible_x2: Partial<Counts> = {
+, two_invisible_ghosts: Partial<Counts> = {
   "ghost-invisible": 2
 }
-, weirdFullVisibility: Counts = {
-  "main-visible": 1,
-  "main-invisible": 0,
+, weird_full_visibility: Counts = {
+  "child-visible": 1,
+  "child-invisible": 0,
   "ghost-visible": 1,
   "ghost-invisible": 0,
 } 
@@ -47,23 +47,23 @@ describe("MountOnDemand", () => {
 
   myDescribe(0, "no class", () => {
     myIt("Everything rendered", () => cy
-      .then(checkingCounts({mainInvisibleOnly}))
+      .then(checkingCounts({only_hidden_children}))
       .get(externalInput)
       .check()
-      .then(checkingCounts({mainVisibleOnly}))
+      .then(checkingCounts({only_visible_children}))
     )
   })
 
   myDescribe(1, "children structures", () => {
     myIt("No children", () => cy
-      .then(checkingCounts({ghostInvisibleOnly}))
+      .then(checkingCounts({only_invisible_ghosts}))
     )
 
     myIt("All mounted after check", () => cy
       .get(externalInput)
       .check()
-      .then(checkingCounts({mainVisibleOnly}))
-      .get(mainTarget)
+      .then(checkingCounts({only_visible_children}))
+      .get(childTarget)
       .its("length")
       .as("childrenCount")
     )
@@ -71,8 +71,8 @@ describe("MountOnDemand", () => {
     myIt("Nothing changed after uncheck", () => cy
       .get(externalInput)
       .uncheck()
-      .then(checkingCounts({mainInvisibleOnly}))
-      .get(mainTarget)
+      .then(checkingCounts({only_hidden_children}))
+      .get(childTarget)
       .its("length")
       .then(function(length) {
         expect(length).to.eq(this.childrenCount)
@@ -83,16 +83,16 @@ describe("MountOnDemand", () => {
   myDescribe(2, "#2 Dynamic children", () => {
     myIt("TBD", () => cy
       .then(checkingCounts({
-        ghostInvisibleOnly,
-        ghostInvisible_x2
+        only_invisible_ghosts,
+        two_invisible_ghosts
       }))
 
       .get(internalInput)
       .check()
 
       .then(checkingCounts({
-        ghostInvisibleOnly,
-        ghostInvisible_x2
+        only_invisible_ghosts,
+        two_invisible_ghosts
       }))
 
       .get(internalInput)
@@ -100,12 +100,12 @@ describe("MountOnDemand", () => {
       .get(externalInput)
       .check()
 
-      .then(checkingCounts({weirdFullVisibility}))
+      .then(checkingCounts({weird_full_visibility}))
 
       .get(internalInput)
       .check()
 
-      .then(checkingCounts({weirdFullVisibility}))
+      .then(checkingCounts({weird_full_visibility}))
     )
   })
 })
@@ -121,8 +121,8 @@ function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
         
         cy
         .get(`${
-          kind.startsWith("main")
-          ? mainTarget
+          kind.startsWith("child")
+          ? childTarget
           : ghostTarget 
         }${
           kind.endsWith("-visible")
