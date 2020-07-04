@@ -76,7 +76,7 @@ var MountOnDemand = /** @class */ (function (_super) {
             _this.setState(function (_a) {
                 var statuses = _a.statuses;
                 var nextStatuses = onIntersectionEntries(observer, dataSetKey, entries, statuses);
-                return nextStatuses && { statuses: nextStatuses };
+                return nextStatuses && { statuses: __assign(__assign({}, statuses), nextStatuses) };
             });
         }, {
             root: root

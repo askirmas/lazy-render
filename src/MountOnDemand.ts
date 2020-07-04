@@ -72,7 +72,7 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
           const {dataSetKey} = this.props as iMainProps
           this.setState(({statuses}) => {
             const nextStatuses = onIntersectionEntries(observer, dataSetKey, entries, statuses)
-            return nextStatuses && {statuses: nextStatuses}
+            return nextStatuses && {statuses: {...statuses, ...nextStatuses}}
           })
         }, {
           root
