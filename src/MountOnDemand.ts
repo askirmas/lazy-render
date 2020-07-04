@@ -1,30 +1,13 @@
-import { PureComponent, createRef, RefObject, PropsWithChildren, createElement, Attributes, Children, ReactNode, AllHTMLAttributes } from "react"
+import { PureComponent, createRef, PropsWithChildren, createElement, Attributes, Children, ReactNode } from "react"
+import { AllAttributes } from "../defs"
+import { defaultProps, MOUNTED, sStatuses, Props } from "./MountOnDemand.defs"
 
-type iMainProps = {
-  /**
-   * [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), optionally as CSS selector to
-   * @default null means viewport 
-   */
-  //TODO: add other IntersectionObserverInit
-  root: Element | string | null
-  /**
-   * @default "div"
-   */
-  //TODO: Deal with tracing createElement argument types
-  tag: Parameters<typeof createElement>[0]
-  /**
-   * DOM attribute of dataset to use for ghosts
-   * @default "key"
-   */
-  dataSetKey: string
-}
-type AllAttributes = AllHTMLAttributes<HTMLElement>
-type RequiredProps = PropsWithChildren<iMainProps> & AllAttributes
+type RequiredProps = PropsWithChildren<Props> & AllAttributes
 
-export type iProps = PropsWithChildren<Partial<iMainProps>> & AllAttributes
+export type iProps = PropsWithChildren<Partial<Props>> & AllAttributes
 
 type iState = {
-  statuses: Record<string, RefObject<HTMLElement> | null>
+  statuses: sStatuses
 }
 
 const {values: $values} = Object
@@ -34,11 +17,7 @@ const {values: $values} = Object
 // TODO if ghost visible from the start, observer will not fire
 
 export default class MountOnDemand extends PureComponent<PropsWithChildren<iProps>, iState, unknown> {
-  static defaultProps: iMainProps = {
-    root: null,
-    tag: "div",
-    dataSetKey: "key"
-  }
+  static defaultProps: Props = defaultProps
 
   observer: IntersectionObserver|undefined = undefined
   state: iState = {statuses: {}}
@@ -69,7 +48,7 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
           const {observer} = this
           if (!observer)
             return
-          const {dataSetKey} = this.props as iMainProps
+          const {dataSetKey} = this.props as Props
           this.setState(({statuses}) => {
             const nextStatuses = onIntersectionEntries(observer, dataSetKey, entries, statuses)
             return nextStatuses && {statuses: {...statuses, ...nextStatuses}}
@@ -117,7 +96,7 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
       const key = getKey(child, i)
       
       switch (statuses[key]) {
-        case null:
+        case MOUNTED:
           return child
         // case undefined:
         //   return null
@@ -143,12 +122,15 @@ function getKey(child: ReactNode, index: number): string {
   return child?.key ?? `${index}`
 }
 
-function observeStatused(observer: IntersectionObserver, statuses: iState["statuses"]) {
+function observeStatused(observer: IntersectionObserver, statuses: sStatuses) {
   $values(statuses)
   .forEach(ref => {
-    const el = ref?.current
-    if (el)
-      observer.observe(el)
+    if (ref === null || typeof ref !== "object")
+      return
+    const el = ref.current
+    if (el === null)
+      return
+    observer.observe(el)
   })
   // Alternative way:
   // for (const key in statuses) {
@@ -158,7 +140,7 @@ function observeStatused(observer: IntersectionObserver, statuses: iState["statu
   // }
 }
 
-function nextStatuses(statuses: iState["statuses"], children?: ReactNode) :iState["statuses"]|null {
+function nextStatuses(statuses: sStatuses, children?: ReactNode) :sStatuses|null {
   const nextStatuses: typeof statuses = {}
   , deletedChildren = new Set<string>()
   , commonChildren = new Set<string>()
@@ -194,7 +176,7 @@ function nextStatuses(statuses: iState["statuses"], children?: ReactNode) :iStat
   }
 }
 
-function onIntersectionEntries(observer: IntersectionObserver, dataSetKey: string, entries: IntersectionObserverEntry[], statuses: iState["statuses"]) {
+function onIntersectionEntries(observer: IntersectionObserver, dataSetKey: string, entries: IntersectionObserverEntry[], statuses: sStatuses) {
   const appeared: typeof statuses = {} 
   let changed = false
 
@@ -222,7 +204,11 @@ function onIntersectionEntries(observer: IntersectionObserver, dataSetKey: strin
     ))
       continue
 
-    const el = statuses[key]?.current
+    const ref = statuses[key]
+    if (ref === null || typeof ref !== "object")
+      continue
+      
+    const el = ref.current
 
     if (!el)
       continue
@@ -230,7 +216,7 @@ function onIntersectionEntries(observer: IntersectionObserver, dataSetKey: strin
       continue
 
     observer.unobserve(el)
-    appeared[key] = null
+    appeared[key] = MOUNTED
     changed || (changed = true)
   }
 
