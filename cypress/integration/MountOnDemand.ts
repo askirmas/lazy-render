@@ -4,54 +4,60 @@ type Counts = Record<"child-visible"|"child-invisible"|"ghost-visible"|"ghost-in
 type func = (...args: unknown[]) => unknown
 
 const nop = () => {}
-, cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? "" : `="${x}"`}]`
-, section = (x?: string|number) => `section${cyAttr(x)}`
-, target = `.target`
-, childTarget = `${target}${cyAttr("child")}`
-, ghostTarget = `${target}${cyAttr("ghost")}`
-, externalInput = `input${cyAttr('external')}`
-, internalInput = `input${cyAttr('internal')}`
-, only_invisible_ghosts: Counts = {
-  "ghost-visible": 0,
-  "ghost-invisible": true,
-  "child-visible": 0,
-  "child-invisible": 0,
-}
-, only_visible_children: Counts = {
-  "ghost-visible": 0,
-  "ghost-invisible": 0,
-  "child-visible": true,
-  "child-invisible": 0,
-}
-, only_hidden_children: Counts = {
-  "ghost-visible": 0,
-  "ghost-invisible": 0,
-  "child-visible": 0,
-  "child-invisible": true,
-}
-, each_hidden: Counts = {
-  "child-visible": 0,
-  "child-invisible": 1,
-  "ghost-visible": 0,
-  "ghost-invisible": 1,
-} 
-, two_invisible_ghosts: Partial<Counts> = {
-  "ghost-invisible": 2
-}
-, one_visible_child: Partial<Counts> = {
-  "child-visible": 1
-}
-, two_visible_children: Partial<Counts> = {
-  "child-visible": 2
-}
-, weird_visibility: Counts = {
-  "child-visible": 1,
-  "child-invisible": 0,
-  "ghost-visible": 1,
-  "ghost-invisible": 0,
-} 
 
 describe("MountOnDemand", () => {
+  const cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? "" : `="${x}"`}]`
+  , section = (x?: string|number) => `section${cyAttr(x)}`
+  , target = `.target`
+  , childTarget = `${target}${cyAttr("child")}`
+  , ghostTarget = `${target}${cyAttr("ghost")}`
+  , externalInput = `input${cyAttr('external')}`
+  , internalInput = `input${cyAttr('internal')}`
+  , only_invisible_ghosts: Counts = {
+    "ghost-visible": 0,
+    "ghost-invisible": true,
+    "child-visible": 0,
+    "child-invisible": 0,
+  }
+  , only_visible_children: Counts = {
+    "ghost-visible": 0,
+    "ghost-invisible": 0,
+    "child-visible": true,
+    "child-invisible": 0,
+  }
+  , only_hidden_children: Counts = {
+    "ghost-visible": 0,
+    "ghost-invisible": 0,
+    "child-visible": 0,
+    "child-invisible": true,
+  }
+  , each_hidden: Counts = {
+    "child-visible": 0,
+    "child-invisible": 1,
+    "ghost-visible": 0,
+    "ghost-invisible": 1,
+  }
+  , one_hidden_child: Partial<Counts> = {
+    "child-invisible": 1
+  }
+  , one_hidden_ghost: Partial<Counts> = {
+    "ghost-invisible": 1
+  }
+  , two_hidden_ghosts: Partial<Counts> = {
+    "ghost-invisible": 2
+  }
+  , one_visible_child: Partial<Counts> = {
+    "child-visible": 1
+  }
+  , two_visible_children: Partial<Counts> = {
+    "child-visible": 2
+  }
+  , weird_visibility: Counts = {
+    "child-visible": 1,
+    "child-invisible": 0,
+    "ghost-visible": 1,
+    "ghost-invisible": 0,
+  } 
   
   before(() => cy.visit("MountOnDemand"))
 
@@ -61,14 +67,12 @@ describe("MountOnDemand", () => {
   )
 
   describeContained(0, "Note", () => {
-    itContained("UNST Ghosts are not hidden - Everything rendered", () => cy
+    itContained("UNST Ghosts are not hidden - Everything rendered. DONE key mandatory", () => cy
       .then(checkingCounts({only_hidden_children}))
       .get(externalInput)
       .check()
       .then(checkingCounts({only_visible_children}))
     )
-
-    it("TBD Children without key are not affected")
 
     it("TBD Props expected to be immutable")
   })
@@ -103,7 +107,7 @@ describe("MountOnDemand", () => {
     itContained("RES", () => cy
       .then(checkingCounts({
         only_invisible_ghosts,
-        two_invisible_ghosts
+        one_invisible_ghost: one_hidden_ghost
       }))
 
       .get(internalInput)
@@ -111,7 +115,7 @@ describe("MountOnDemand", () => {
 
       .then(checkingCounts({
         only_invisible_ghosts,
-        two_invisible_ghosts
+        two_invisible_ghosts: two_hidden_ghosts
       }))
 
       .get(internalInput)
@@ -119,7 +123,10 @@ describe("MountOnDemand", () => {
       .get(externalInput)
       .check()
 
-      .then(checkingCounts({weird_visibility}))
+      .then(checkingCounts({
+        only_visible_children,
+        one_visible_child
+      }))
 
       .get(internalInput)
       .check()
@@ -132,7 +139,7 @@ describe("MountOnDemand", () => {
     itContained("RES", () => cy
       .then(checkingCounts({
         only_invisible_ghosts,
-        two_invisible_ghosts
+        two_invisible_ghosts: two_hidden_ghosts
       }))
 
       .get(internalInput)
@@ -140,7 +147,7 @@ describe("MountOnDemand", () => {
 
       .then(checkingCounts({
         only_invisible_ghosts,
-        two_invisible_ghosts
+        one_invisible_ghost: one_hidden_ghost
       }))
 
       .get(internalInput)
@@ -153,7 +160,10 @@ describe("MountOnDemand", () => {
       .get(internalInput)
       .uncheck()
 
-      .then(checkingCounts({weird_visibility}))
+      .then(checkingCounts({
+        only_visible_children,
+        one_visible_child
+      }))
     )
   })
 
@@ -174,8 +184,11 @@ describe("MountOnDemand", () => {
       .get(externalInput)
       .uncheck()
 
-      .then(checkingCounts({each_hidden}))
-
+      .then(checkingCounts({
+        only_hidden_children,
+        one_hidden_child
+      }))
+      
       .get(internalInput)
       .check()
 
@@ -193,7 +206,10 @@ describe("MountOnDemand", () => {
       .get(internalInput)
       .uncheck()
 
-      .then(checkingCounts({weird_visibility}))
+      .then(checkingCounts({
+        only_visible_children,
+        one_visible_child
+      }))
 
       .get(internalInput)
       .check()
@@ -205,7 +221,10 @@ describe("MountOnDemand", () => {
       .get(internalInput)
       .uncheck()
 
-      .then(checkingCounts({each_hidden}))
+      .then(checkingCounts({
+        only_hidden_children,
+        one_hidden_child
+      }))
     )
   })
 
@@ -225,67 +244,70 @@ describe("MountOnDemand", () => {
   describeContained(-1, "* Observer options")
 
   describeContained(-1, "* Own options")
-})
 
-function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
-  return () => {
-    for (const assert in asserts) {
-      const counts = asserts[assert]
-      cy.log(assert)
-
-      for (const kind in counts) {
-        const kindCounts = counts[kind as keyof typeof counts]
-        
-        cy
-        .get(`${
-          kind.startsWith("child")
-          ? childTarget
-          : ghostTarget 
-        }${
-          kind.endsWith("-visible")
-          ? ":visible"
-          : kind.endsWith("-invisible")
-          ? ":not(:visible)"
-          : ""
-        }`)
-        .should(
-          `${kindCounts === true ? "not." : ""}have.length`,
-          kindCounts === true ? 0 : kindCounts
-        )
+  function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
+    return () => {
+      for (const assert in asserts) {
+        const counts = asserts[assert]
+        cy.log(assert)
+  
+        for (const kind in counts) {
+          const kindCounts = counts[kind as keyof typeof counts]
+          
+          cy
+          .get(`${
+            kind.startsWith("child")
+            ? childTarget
+            : ghostTarget 
+          }${
+            kind.endsWith("-visible")
+            ? ":visible"
+            : kind.endsWith("-invisible")
+            ? ":not(:visible)"
+            : ""
+          }`)
+          .should(
+            `${kindCounts === true ? "not." : ""}have.length`,
+            kindCounts === true ? 0 : kindCounts
+          )
+        }
       }
     }
   }
-}
 
-function describeContained(index: number, title: string, fn: Parameters<typeof statused>[3] = nop) {
-  statused(
-    describe,
-    title[0],
-    `${index}. ${title}`,
-    () => {
-      beforeEach(() => cy.get(section(index)).as("container"))
-      fn.call(this)
-    }
-  )
-}
+  function describeContained(this: any, index: number, title: string, fn: Parameters<typeof statused>[3] = nop) {
+    statused(
+      describe,
+      title[0],
+      `${index}. ${title}`,
+      () => {
+        beforeEach(() => cy.get(section(index)).as("container"))
+        fn.call(this)
+      }
+    )
+  }
+})
+
+
 
 function itContained(title: string, fn: Parameters<typeof statused>[3] = nop) {
   statused(
     it,
     title[0],
     title,
-    () => cy.get("@container").within(fn.bind(this))
+    () => cy.get("@container").within(fn)
   )
 }
 
 
 
-function statused(source: func & Record<"only"|"skip", func>, control: string, title: string,  fn: (this: Mocha.Suite) => void) {
+function statused(source: Mocha.TestFunction|Mocha.SuiteFunction, control: string, title: string,  fn: (this: Mocha.Suite) => void) {
   const s = control === '!'
   ? source.only
   : control === '*'
   ? source.skip
   : source
 
+  //@ts-ignore
   s(title, fn)
 }

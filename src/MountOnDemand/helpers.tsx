@@ -7,9 +7,11 @@ export {
   getKey, observeStatused, nextStatuses, onIntersectionEntries
 }
 
-function getKey(child: ReactNode, index: number): string {
+function getKey(child: ReactNode): string|null {
+  if (child === null || typeof child !== "object")
+    return null
   //@ts-ignore
-  return child?.key ?? `${index}`
+  return child.key
 }
 
 function observeStatused(observer: IntersectionObserver, statuses: sStatuses) {
@@ -37,14 +39,17 @@ function nextStatuses(statuses: sStatuses, children?: ReactNode) :sStatuses|null
 
   let hasNew = false
 
-  Children.forEach(children, (child, i) => {
-    const key = getKey(child, i)
-    if (statuses[key] !== undefined) {
-      commonChildren.add(key)
-    } else {
-      hasNew || (hasNew = true)
-      nextStatuses[key] = createRef()
-    }
+  Children.forEach(children, child => {
+    const key = getKey(child)
+    if (typeof key !== "string")
+      return
+
+    if (statuses[key] !== undefined)
+      return commonChildren.add(key)
+
+    hasNew || (hasNew = true)
+    nextStatuses[key] = createRef()
+    return
   })
 
   for (const key in statuses) {

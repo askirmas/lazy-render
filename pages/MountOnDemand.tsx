@@ -17,14 +17,37 @@ function App() {
       <article>
         <H i="3">No rule to hide ghost - no className</H>
         <MountOnDemand>
-          <div title="no className" className="target" data-cypress="child"/>
+          <div key="first" title="no className" className="target" data-cypress="child"/>
         </MountOnDemand>
       </article>
       <article>
         <H i="3">No rule to hide ghost - wrong className</H>     
         <MountOnDemand className="another-target">
+          <div key="first" title="wrong className" className="target" data-cypress="child"/>
+        </MountOnDemand>      
+      </article>
+      <article>
+        <H i="3">No key - bypass</H>     
+        <MountOnDemand className="target">
           <div title="wrong className" className="target" data-cypress="child"/>
         </MountOnDemand>      
+      </article>
+      <article>
+        <H i="3">No key - bypass</H>     
+        <MountOnDemand className="target">
+          <div title="wrong className" className="target" data-cypress="child"/>
+        </MountOnDemand>      
+      </article>
+
+      <article>
+        <H i="3">Fragment short syntax has no key</H>
+        <MountOnDemand className="target" data-cypress="ghost">
+          <>
+            <div key="first" title="first" className="target" data-cypress="child"/>
+            <div key="second" title="second" className="target" data-cypress="child"/>
+            <div key="third" title="third" className="target" data-cypress="child"/>
+          </>
+        </MountOnDemand>
       </article>
     </section>
 
@@ -34,7 +57,7 @@ function App() {
       <article>
         <H i="3">Single child</H>
         <MountOnDemand className="target" data-cypress="ghost">
-          <div title="single" className="target" data-cypress="child"/>
+          <div key="first" title="single" className="target" data-cypress="child"/>
         </MountOnDemand>
       </article>
       <article>
@@ -46,22 +69,12 @@ function App() {
         </MountOnDemand>
       </article>
       <article>
-        <H i="3">Fragment shot syntax</H>
-        <MountOnDemand className="target" data-cypress="ghost">
-          <>
-            <div key="first" title="first" className="target" data-cypress="child"/>
-            <div key="second" title="second" className="target" data-cypress="child"/>
-            <div key="third" title="third" className="target" data-cypress="child"/>
-          </>
-        </MountOnDemand>
-      </article>
-      <article>
         <H i="3">Fragment</H>
         <MountOnDemand className="target" data-cypress="ghost">
-          <Fragment>
-            <div key="first" title="first" className="target" data-cypress="child"/>
-            <div key="second" title="second" className="target" data-cypress="child"/>
-            <div key="third" title="third" className="target" data-cypress="child"/>
+          <Fragment key="fragment">
+            <div title="first" className="target" data-cypress="child"/>
+            <div title="second" className="target" data-cypress="child"/>
+            <div title="third" className="target" data-cypress="child"/>
           </Fragment>
         </MountOnDemand>
       </article>
@@ -76,6 +89,7 @@ function App() {
         </MountOnDemand>
       </article>
     </section>
+
     <section data-cypress="2">
       <H i="2">Dynamic hidden children - -</H>
       <input type="checkbox" className="display-none" data-cypress="external"/>

@@ -3,6 +3,10 @@
     "allowJs": true,
     "isolatedModules": false,
     "downlevelIteration": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
     "baseUrl": "../node_modules",
     "lib": [
       "es5",

@@ -89,11 +89,13 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
     } = this.state
     , attribute = `data-${dataSetKey}`
 
-    return Children.map(children, (child, i) => {
-      const key = getKey(child, i)
-      , ref = statuses[key]
+    return Children.map(children, child => {
+      const key = getKey(child)
+      if (typeof key !== "string")
+        return child
 
-      if (ref === null || typeof ref !== "object" || !("current" in ref))
+      const ref = statuses[key]
+      if (ref === null || typeof ref !== "object")
         return child
 
       return createElement(
@@ -102,7 +104,7 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
           ...etc,
           ...{
             key,
-            "ref": statuses[key],
+            ref,
             [attribute]: key,
             // TODO force invisibility
             // "style": {"display": "none"}
