@@ -1,6 +1,6 @@
 import { PureComponent, PropsWithChildren, createElement, Attributes, Children } from "react"
 import { AllAttributes } from "../../defs"
-import { defaultProps, MOUNTED, sStatuses, Props } from "./defs"
+import { defaultProps, sStatuses, Props } from "./defs"
 import { getKey, onIntersectionEntries, observeStatused, nextStatuses } from "./helpers"
 
 type RequiredProps = PropsWithChildren<Props> & AllAttributes
@@ -21,6 +21,8 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
   observer: IntersectionObserver|undefined = undefined
   state: iState = {statuses: {}}
 
+  // TODO
+  // $setStatuses: () => {...}
   constructor(props: PropsWithChildren<iProps>, ctx: unknown) {
     super(props, ctx)
     
@@ -36,7 +38,7 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
     : _r
 
     //TODO: External observer may be in props
-    const observer = (
+    this.observer = (
       new IntersectionObserver(
         entries => {
           const {observer} = this
@@ -53,7 +55,6 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
       )
     )
 
-    this.observer = observer
     this.componentDidUpdate()
   }
   
@@ -70,6 +71,8 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
     this.setState(({statuses}) => {
       const next = nextStatuses(statuses, this.props.children)
       return next && {statuses: next}
+      // TODO understand
+      // return next && {statuses: {...statuses, ...next}}
     })
   }
 
@@ -88,25 +91,24 @@ export default class MountOnDemand extends PureComponent<PropsWithChildren<iProp
 
     return Children.map(children, (child, i) => {
       const key = getKey(child, i)
-      
-      switch (statuses[key]) {
-        case MOUNTED:
-          return child
-        // case undefined:
-        //   return null
-        default:
-          return createElement(
-            tag,
-            {
-              ...etc,
-              ...{
-                key,
-                "ref": statuses[key],
-                [attribute]: key
-              } as Attributes
-            }
-          )
-      }
+      , ref = statuses[key]
+
+      if (ref === null || typeof ref !== "object" || !("current" in ref))
+        return child
+
+      return createElement(
+        tag,
+        {
+          ...etc,
+          ...{
+            key,
+            "ref": statuses[key],
+            [attribute]: key,
+            // TODO force invisibility
+            // "style": {"display": "none"}
+          } as Attributes
+        }
+      )
     })
   }
 }
