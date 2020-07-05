@@ -6,7 +6,8 @@ type func = (...args: unknown[]) => unknown
 const nop = () => {}
 
 describe("MountOnDemand", () => {
-  const cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? "" : `="${x}"`}]`
+  const {testIn: {itIn, describeIn}} = Cypress
+  , cyAttr = (x?: string|number) => `[data-cypress${x === undefined ? "" : `="${x}"`}]`
   , section = (x?: string|number) => `section${cyAttr(x)}`
   , target = `.target`
   , childTarget = `${target}${cyAttr("child")}`
@@ -66,8 +67,8 @@ describe("MountOnDemand", () => {
     .should("have.length", 6)
   )
 
-  describeContained(0, "Note", () => {
-    itContained("UNST Ghosts are not hidden - Everything rendered. DONE key mandatory", () => cy
+  describeIn("+", "0 Note", section(0), () => {
+    itIn("UNST Ghosts are not hidden - Everything rendered. DONE key mandatory", () => cy
       .then(checkingCounts({only_hidden_children}))
       .get(externalInput)
       .check()
@@ -77,12 +78,12 @@ describe("MountOnDemand", () => {
     it("TBD Props expected to be immutable")
   })
 
-  describeContained(1, "Static children structures", () => {
-    itContained("No children in DOM", () => cy
+  describeIn("+", "1 Static children structures", section(1), () => {
+    itIn("No children in DOM", () => cy
       .then(checkingCounts({only_invisible_ghosts}))
     )
 
-    itContained("All children are mounted after check", () => cy
+    itIn("All children are mounted after check", () => cy
       .get(externalInput)
       .check()
       .then(checkingCounts({only_visible_children}))
@@ -91,7 +92,7 @@ describe("MountOnDemand", () => {
       .as("childrenCount")
     )
 
-    itContained("Nothing changed after uncheck", () => cy
+    itIn("Nothing changed after uncheck", () => cy
       .get(externalInput)
       .uncheck()
       .then(checkingCounts({only_hidden_children}))
@@ -103,19 +104,17 @@ describe("MountOnDemand", () => {
     )
   })
 
-  describeContained(2, "#2 Dynamic children  - -", () => {
-    itContained("RES", () => cy
-      .then(checkingCounts({
-        only_invisible_ghosts,
-        one_invisible_ghost: one_hidden_ghost
+  describeIn("+", "2 #2 Dynamic children  - -", section(2), () => {
+    itIn("RES", () => cy
+      .then(keyStatuses({
+        "first": ["ghost", false]
       }))
-
       .get(internalInput)
       .check()
 
-      .then(checkingCounts({
-        only_invisible_ghosts,
-        two_invisible_ghosts: two_hidden_ghosts
+      .then(keyStatuses({
+        "first": ["ghost", false],
+        "second": ["ghost", false],
       }))
 
       .get(internalInput)
@@ -123,23 +122,30 @@ describe("MountOnDemand", () => {
       .get(externalInput)
       .check()
 
-      .then(checkingCounts({
-        only_visible_children,
-        one_visible_child
+      .then(keyStatuses({
+        "first": ["child", true]
       }))
 
       .get(internalInput)
       .check()
 
       .then(checkingCounts({weird_visibility}))
+      .then(keyStatuses({
+        "first": ["child", true],
+        "second": ["ghost", true]
+      }))
     )
   })
 
-  describeContained(3, "#2 Dynamic children - +", () => {
-    itContained("RES", () => cy
+  describeIn("+", "3 ! #2 Dynamic children - +", section(3), () => {
+    itIn("RES", () => cy
       .then(checkingCounts({
         only_invisible_ghosts,
-        two_invisible_ghosts: two_hidden_ghosts
+        two_hidden_ghosts
+      }))
+      .then(keyStatuses({
+        "first": ["ghost", false],
+        "second": ["ghost", false],
       }))
 
       .get(internalInput)
@@ -147,7 +153,10 @@ describe("MountOnDemand", () => {
 
       .then(checkingCounts({
         only_invisible_ghosts,
-        one_invisible_ghost: one_hidden_ghost
+        one_hidden_ghost
+      }))
+      .then(keyStatuses({
+        "first": ["ghost", false],
       }))
 
       .get(internalInput)
@@ -167,8 +176,8 @@ describe("MountOnDemand", () => {
     )
   })
 
-  describeContained(4, "#2 Dynamic children + -", () => {
-    itContained("RES", () => cy
+  describeIn("+", "4 #2 Dynamic children + -", section(4), () => {
+    itIn("RES", () => cy
       .then(checkingCounts({
         only_visible_children,
         one_visible_child
@@ -196,8 +205,8 @@ describe("MountOnDemand", () => {
     )
   })
 
-  describeContained(5, "#2 Dynamic children + +", () => {
-    itContained("RES", () => cy
+  describeIn("+", "5 #2 Dynamic children + +", section(5), () => {
+    itIn("RES", () => cy
       .then(checkingCounts({
         only_visible_children,
         two_visible_children
@@ -229,21 +238,43 @@ describe("MountOnDemand", () => {
   })
 
 
-  describeContained(-1, "* Other CSS invisibilities", () => {
-    itContained("* visibility: hidden; z-index: -1")
-    itContained("* opacity: 0; z-index: -1")
-    itContained("* clip-path: polygon(0 0); z-index: -1")
+  describeIn("*", "* -1 Other CSS invisibilities", "", () => {
+    itIn("* visibility: hidden; z-index: -1")
+    itIn("* opacity: 0; z-index: -1")
+    itIn("* clip-path: polygon(0 0); z-index: -1")
   })
 
-  describeContained(-1, "* Other CSS invisibilities", () => {
-    itContained("* visibility: hidden; z-index: -1")
-    itContained("* opacity: 0; z-index: -1")
-    itContained("* clip-path: polygon(0 0); z-index: -1")
+  describeIn("*", "* -1 Other CSS invisibilities", "", () => {
+    itIn("* visibility: hidden; z-index: -1")
+    itIn("* opacity: 0; z-index: -1")
+    itIn("* clip-path: polygon(0 0); z-index: -1")
   })
 
-  describeContained(-1, "* Observer options")
+  describeIn("*", "-1 Observer options")
 
-  describeContained(-1, "* Own options")
+  describeIn("*", "-1 Own options")
+
+  function keyStatuses(data:  Partial<Record<"first"|"second", ["child"|"ghost", boolean]>>) {
+    return () => cy
+    .get(target)
+    .then($els => {
+      const statuses: Partial<Record<"first"|"second", ["child"|"ghost"|undefined, boolean]>> = {}
+      $els.each((_, el) => {
+        cy.log(el.tagName)
+        //@ts-ignore
+        statuses[
+          (el.getAttribute('title') ?? el.dataset.key ?? 'undefined')
+          .replace(/^\.\$/, '')
+        ] = [
+          //@ts-ignore
+          el.dataset.cypress,
+          Cypress.$(el).is(":visible")
+        ]
+      })
+
+      expect(statuses).to.deep.eq(data)
+    })
+  }
 
   function checkingCounts(asserts: {[name: string]: Partial<Counts>}) {
     return () => {
@@ -274,40 +305,4 @@ describe("MountOnDemand", () => {
       }
     }
   }
-
-  function describeContained(this: any, index: number, title: string, fn: Parameters<typeof statused>[3] = nop) {
-    statused(
-      describe,
-      title[0],
-      `${index}. ${title}`,
-      () => {
-        beforeEach(() => cy.get(section(index)).as("container"))
-        fn.call(this)
-      }
-    )
-  }
 })
-
-
-
-function itContained(title: string, fn: Parameters<typeof statused>[3] = nop) {
-  statused(
-    it,
-    title[0],
-    title,
-    () => cy.get("@container").within(fn)
-  )
-}
-
-
-
-function statused(source: Mocha.TestFunction|Mocha.SuiteFunction, control: string, title: string,  fn: (this: Mocha.Suite) => void) {
-  const s = control === '!'
-  ? source.only
-  : control === '*'
-  ? source.skip
-  : source
-
-  //@ts-ignore
-  s(title, fn)
-}

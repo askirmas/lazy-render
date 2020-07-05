@@ -18,6 +18,7 @@
 
 import './visit'
 import './checking'
+import './testing'
 
 chai.config.truncateThreshold = 0
 // Alternatively you can use CommonJS syntax:
